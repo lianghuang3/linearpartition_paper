@@ -1,0 +1,59 @@
+Fast and accurate prediction of RNA secondary structures 
+(the set of canonical base pairs)
+is an important problem, 
+because RNA structures reveal crucial information about their functions.
+Existing approaches can reach a reasonable accuracy 
+for relatively short RNAs %shorter than 800 nucleotides, 
+but their running time scales almost cubically with sequence length,
+which is too slow for longer RNAs.
+We develop the first linear-time algorithm for RNA secondary structure prediction.
+%Our algorithm works for both thermodynamic and machine learned models,
+Surprisingly, our algorithm not only runs much faster,
+but also leads to higher overall accuracy % over all families 
+on a diverse set of RNA sequences with known structures,
+where the improvement is significant for long RNA families such as
+%significantly higher accuracies for the longest RNA families such as 
+%% and more interestingly, this improvement is significant on long RNA families such as
+16S and 23S Ribosomal RNAs.
+More interestingly, it also more accurate for long-range base pairs.
+
+%without loss of accuracy.
+%% many RNA sequences are not translated to proteins (non-coding RNAs)
+%% and instead have intrinsic functions; 
+
+%%  non-coding RNAs. 
+%% (e.g., the HIV genome has $\sim$10,000 nucleotides).
+%% to be useful experimentally
+%% While experimental assays still constitute the most reliable way to determine
+%% such structures, they are prohibitively costly and slow; 
+%% therefore computational prediction provides an attractive alternative. 
+%% In this direction, 
+
+%and we call these RNA sequences noncoding RNA
+%% , which is useful in many
+%% applications ranging from noncoding RNA detection to the design of oligonucleotides for knockdown of message.
+%various studies have greatly improved the accuracy of prediction, but there is
+%not enough attention on the speed of prediction.
+
+%% that is high enough 
+%% to be useful in developing hypotheses that can be tested experimentally,
+
+%All existing approaches to this problem use a dynamic programming algorithm 
+%\cite{mathews+turner:2006,washietl+:2012}.  
+%% On average, 73\% of known base pairs are correctly predicted in benchmarks of accuracy for sequences shorter than 800 nucleotides \cite{mathews+:2004,lu+:2009,bellaousov+mathews:2010}.  
+%% This accuracy is high enough to be useful in developing hypotheses that can be tested experimentally.  But these methods have time complexity ranging from $O(n^3)$ to $O(n^6)$, where $n$ is the sequence length, which is too slow for long ncRNAs ($n\!>\!1,000$).  This proposal would address this bottleneck in analysis by providing accurate structure prediction with {\bf linear-time complexity}, using the PI's recent breakthroughs in natural language processing \cite{huang+sagae:2010}.
+
+% from Mathews, used in the R01 proposal
+
+\iffalse
+{\bf RNA is Critical to Cellular Function.}  
+Over the last three decades, we have become increasingly aware that RNA is actively involved in Biology.  Many RNA sequences have intrinsic functions, without being translated to proteins, and we call these RNA sequences noncoding RNA (ncRNA) \cite{eddy:2001}.  
+ncRNA sequences catalyze reactions \cite{doudna+cech:2002,scott:2007},  
+regulate gene expression \cite{storz+gottesman:2006,wu+belasco:2008,serganov+nudler:2013},  provide site recognition for proteins \cite{bachellerie+:2002,wahl+:2009} and serve in trafficking of proteins \cite{walter+blobel:1982}.  It is known that many regions in genomes are transcribed, suggesting there are yet a large number of unknown ncRNA sequences, and new ncRNAs are being reported regularly \cite{birney+:2007}.  A new frontier is the discovery and characterization of long noncoding RNAs \cite{johnsson+:2014}.  Furthermore, the dual nature of RNA as both a genetic material and functional molecule led to the RNA World hypothesis, that RNA was the first molecule of life \cite{gilbert:1986},  and this dual nature has also been utilized to develop in vitro methods to evolve functional sequences \cite{joyce:1994}. Finally, RNA is an important drug target and agent \cite{sucheck+wong:2000,sazani+:2002,crooke:2004,childs-disney+:2007,gareiss+:2008,castanotto+rossi:2009,palde+:2010}.
+
+{\bf Overview of RNA Structure.}
+RNA structure is hierarchical \cite{tinoco+bustamante:1999}.  The primary structure is the covalent structure encoded in the nucleotide sequence.  The secondary structure is the set of canonical base pairs (A-U, G-C, and G-U; Fig.~\ref{fig:pseudoknot}).  The tertiary structure is the 3D structure and the full set of molecular contacts.  Secondary structure generally forms faster \cite{zarrinkar+williamson:1994,woodson:2000} and is more stable \cite{crothers+:1974,banerjee+:1993,onoa+:2003} than tertiary structure.  Therefore, secondary structure can be accurately predicted independently of tertiary structure.
+
+{\bf Prediction of RNA Secondary Structure.}
+The most popular approach to RNA secondary structure prediction is free energy minimization with a dynamic programming algorithm \cite{mathews+turner:2006,washietl+:2012}.  On average, 73\% of known base pairs are correctly predicted in benchmarks of accuracy for sequences shorter than 800 nucleotides \cite{mathews+:2004,lu+:2009,bellaousov+mathews:2010}.  This accuracy is high enough to be useful in developing hypotheses that can be tested experimentally.  But these methods have time complexity ranging from $O(n^3)$ to $O(n^6)$, where $n$ is the sequence length, which is too slow for long ncRNAs ($n\!>\!1,000$).  This proposal would address this bottleneck in analysis by providing accurate structure prediction with {\bf linear-time complexity}, using the PI's recent breakthroughs in natural language processing \cite{huang+sagae:2010}.
+\fi

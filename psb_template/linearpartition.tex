@@ -1,0 +1,95 @@
+%\documentclass[wsdraft]{ws-procs11x85}
+
+\documentclass{ws-procs11x85}
+\usepackage{ws-procs-thm}           % comment this line when `amsthm / theorem / ntheorem` package is used
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\usepackage{graphicx}
+\usepackage{relsize}
+\usepackage{multirow}
+\usepackage{multicol}
+% \usepackage{caption}
+\usepackage{xspace}
+\usepackage{float}
+
+% \usepackage{hyperref}
+% \hypersetup{
+%     colorlinks=true,
+%     linkcolor=blue,
+%     filecolor=magenta,      
+%     urlcolor=blue,
+% }
+ 
+\urlstyle{same}
+
+\input{defs} % lhuang: definitions
+
+% \newcommand{\viennarnafold}{{Vienna RNAfold}\xspace}
+
+
+% \pagenumbering{arabic}
+
+\begin{document}
+
+% \twocolumn
+% \begin{multicols}{1}
+
+\title{{\bf{\linearpartition}}: Linear Time RNA Partition Function and Base Pair Probability Calculation}
+
+\author{He Zhang$^{\text{1,2}}$, Liang Zhang$^{\text{2}}$, David H. Mathews$^{\text{3,4,5}}$ and Liang Huang$^{\text{2,1},\dag}$}
+
+\address{$^{\text{1}}$Baidu Research USA, Sunnyvale, CA 94089, USA,
+$^{\text{2}}$School of Electrical Engineering and Computer Science, Oregon State University, Corvallis, OR 97330, USA, 
+$^{\text{3}}$Department of Biochemistry ~\& Biophysics,
+$^{\text{4}}$Center for RNA Biology,
+and $^{\text{5}}$Department of Biostatistics ~\& Computational Biology, University of Rochester Medical Center, Rochester, NY 48306, USA
+$^\dag$E-mail: liang.huang.sh@gmail.com}
+
+% \author{Liang Huang$^{\text{2,1},\dag}$}
+
+% \address{$^{\text{2}}$School of Electrical Engineering and Computer Science, Oregon State University, \\Corvallis, OR 97330, USA\\
+% E-mail: an\_author@laboratory.com}
+% \pagenumbering{gobble}
+
+\begin{abstract}
+% what:
+RNA secondary structure prediction is a well-known problem, and it has been used for medical design. 
+Compared with MFE-based methods, partition function-based methods have gained more and more attention due to their higher accuracy and ability to predict pseudoknots.
+% why:
+However, partition function calculation, as well as the downstream base pair probability prediction, uses cubic algorithm and is slow. This slowness is even more severe than cubic MFE-based methods because of the larger cost in the inner loop. 
+% how:
+To address this, we present \linearpartition, a novel algorithm that can calculate partition function and base pair probability in both linear runtime and linear memory space with RNA sequence length.
+% wow:
+\linearpartition, as an extention of LinearFold, inherits LinearFold's efficiency and accuracy. \linearpartition is 10$\times$ faster than \viennarnafold for the longest sequence (about 3000 nucleotides) in the dataset. Not only fast, \linearpartition is as accurate as \viennarnafold when comparing MEA and ProbKnot output structure. 
+Surprisingly, even though \linearpartition uses an inexact search, it achieves better accuracy on longer families (16S and 23S rRNA).
+
+\end{abstract}
+
+\keywords{RNA secondary structure, partition function, base pair probability, linear time.}
+% \end{multicols}
+% \twocolumn
+\begin{multicols}{2}
+% required, do-not-remove
+% \copyrightinfo{\copyright\ 2016 The Authors. Open Access chapter published by World Scientific Publishing Company and distributed under the terms of the Creative Commons Attribution Non-Commercial (CC BY-NC) 4.0 License.}
+
+\section{Introduction}\label{aba:intro}
+\input{intro}
+
+\section{Results}\label{aba:results}
+\input{results}
+
+\section{Methods}\label{aba:methods}
+\input{methods}
+
+\section{Discussion}\label{aba:discussion}
+\input{discussion}
+
+% \section{Related Work}\label{aba:related_work}
+\end{multicols}
+
+\bibliographystyle{ws-procs11x85}
+\bibliography{linearpartition.bib}
+
+\end{document} 
+
+%%% \renewcommand\bibname{References\\ {\normalfont\it References can be typed in your preferred bibliography style.}}

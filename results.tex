@@ -1,0 +1,654 @@
+% !TEX root = main.tex
+\vspace{-0.1cm}
+\section{Results}
+\vspace{-0.1cm}
+% \input{alg}
+
+\subsection{Efficiency and Scalability}
+\input{fig_time_mem}
+
+
+We present two versions of \linearpartition:
+{\em \linearpartitionv}
+using thermodynamic parameters~\cite{mathews+:1999,Mathews+:2004,xia+:1998}
+%as implemented in
+following \viennarnafold~\cite{lorenz+:2011},
+and
+{\em \linearpartitionc} using
+the learning-based parameters from \contrafold~\cite{do+:2006}.
+%% \linearpartitionv uses the experiment-based thermodynamic parameters~\cite{mathews+:1999,Mathews+:2004,xia+:1998}
+%% as implemented in \viennarnafold~\cite{lorenz+:2011}.
+%% % (Version 2.4.11) 
+%% % (\url{https://www.tbi.univie.ac.at/RNA/download/sourcecode/2_ 4_x/ViennaRNA-2.4.11.tar.gz}).
+%% \linearpartitionc uses the machine learning-based parameter values from \contrafold~\cite{do+:2006}.
+% (Version 2.0.2; 
+% (\url{http://contra.stanford.edu/}).
+% \viennarnafold is a widely-used RNA structure prediction package,
+% while \contrafold is a successful machine learning-based RNA structure prediction system.
+% Both provide partition function and base pairing probabilities calculation based on 
+% the classical cubic runtime algorithm.
+% Our comparisons mainly focus on the systems with the same model, 
+% i.e., \linearpartitionv vs. \viennarnafold and \linearpartitionc vs. \contrafold.
+% In this way the differences are based on algorithms themselves rather than models.
+% bugs in contrafold
+% We found a non-trival bug in \contrafold by comparing our results to CONTRAfold, 
+% which leads to overcounting in multiloops in the partition function calculation.
+% We corrected the bug, and all experiments are based on this bug-fixed version of \contrafold.
+We use %run all evaluations %experiments 
+% (compiled by GCC 4.9.0) 
+a Linux machine 
+with 2.90GHz Intel i9-7920X CPU and 64G memory for benchmarks.
+We use sequences from two datasets, ArchiveII~\cite{mathews+:1999, sloma+mathews:2016} and RNAcentral~\cite{rnacentral:2017}. See~\ref{sec:datasets} for details of the datasets.
+
+
+\input{fig_ensemble}
+
+Fig.~\ref{fig:runtime} compares the efficiency and scalability between the two baselines, 
+\viennarnafold and \contrafold,
+and our two versions, \linearpartitionv and \linearpartitionc.
+% fair comparison, hack contrafold and vienna
+To make the comparison fair, 
+we disable the downstream tasks
+(MEA prediction in \contrafold, and centroid prediction and visualization in \rnafold)
+% which will be run together with partition function and base pairing probability calculation by default, 
+which are by default enabled.
+ % with partition function and base pairing probabilities calculation,
+% for instance, 
+%% These tasks are MEA structure generation in \contrafold,
+%% as well as centroid structure generation and prediction visualization in \viennarnafold. 
+Fig.~\ref{fig:runtime}A shows that both \linearpartitionv and \linearpartitionc
+scale almost linearly with sequence length $n$.
+The runtime deviation from exact linearity is due to the relatively short sequence lengths in the ArchiveII dataset, 
+which contains a set of sequences with well-determined structures~\cite{sloma+mathews:2016}. 
+%are relatively short
+% (average length is 222.2~\nts).
+Fig.~\ref{fig:runtime}A also confirms that the baselines scale cubically and the $O(n^3)$ runtimes are substantially slower than \linearpartition on long sequences. 
+For the {\it H.~pylori} 23S rRNA sequence (2,968~\nts, the longest in ArchiveII), 
+both versions of \linearpartition  take only 6 seconds,
+while \rnafold and \contrafold take 73 and 120 seconds, resp.
+%and  almost 120 seconds.
+
+
+% Fig.~\ref{fig:runtime}B visualizes the runtimes on RNAcentral sampled sequences.
+% We set the runtime limit for a sequence to be at most 24 hours.
+We also notice that both \rnafold and \contrafold have limitations on even longer sequences.
+% although \viennarnafold designs a scalar estimated from minimum free energy of the given sequence to avoid overflow, 
+\rnafold scales the magnitude of the partition function 
+using a constant estimated from the minimum free energy of the given sequence to avoid overflow,
+% but is still easy to get overflow 
+but overflows still occur 
+on long sequences.
+For example, it overflows %on partition function calculation 
+on the 19,071~\nts sequence in the sampled RNAcentral dataset.
+% so we only show the runtime before this sequence for \viennarnafold.
+% Unlike \viennarnafold, \linearpartition adopts a log space partition function calculation
+% as \contrafold and solve overflow issue fundamentally.
+% \contrafold adopts logarithmic scale of partition function to solve overflow issue,
+% but it cannot run on sequence longer than 32,753~\nts due to memory limitation. 
+\contrafold stores the logarithm of the partition function to solve the overflow issue,
+but cannot run on sequences longer than 32,767~\nts due to using {\tt unsigned short}
+% in its implementation
+to index sequence positions.
+% Beyond these limitations, 
+\linearpartition, like \contrafold, performs computations in the log-space,
+but can run on all sequences in the RNAcentral dataset.
+Fig.~\ref{fig:runtime}B compares the runtime of four systems on a sampled subset of RNAcentral dataset,
+and shows that % only \linearpartition can finish all the examples,
+on longer sequences the runtime of \linearpartition is exactly linear.
+% but \viennarnafold only runs on the first 17 data points because of overflow issue. 
+%Comparing the runtimes of
+For the 15,780~\nts sequence, 
+ % \viennarnafold can run,
+the longest example shown for \rnafold, % in Fig.~\ref{fig:runtime}B,
+%\viennarnafold takes more than 3 hours and
+\linearpartitionv is 256$\times$ faster (more than 3 hours vs.~44.1 seconds). 
+Note that \rnafold may not overflow on some longer sequences, 
+where \linearpartitionv should enjoy an even more salient speedup.
+% ???\contrafold stops at 17th or need to continue???
+For the longest sequence that \contrafold can run (32,753~\nts) in the dataset,
+\linearpartition is 2,771$\times$ faster (2.5 days vs.~1.3 min.).
+%% % is 22,911~\nts, 
+%% it takes 60.7 hours,
+%% compared to \linearpartitionc's 52.4 seconds
+%% (2,771$\times$ speedup).
+% 32,767
+% We find \contrafold has a sequence length limitation of 32,767~\nts due to using "unsigned short" in its implementation.
+% We also test on an artificial sequence with length of 32,767~\nts, 
+% the upper limit for \contrafold, 
+% and the runtime is ?????
+Even for the longest sequence in RNAcentral
+(Homo Sapiens Transcript NONHSAT168677.1 with length 244,296~\nts~\cite{Zhao+:2016}),
+both \linearpartition versions finish in $\sim$10 minutes.
+
+Fig.~\ref{fig:runtime}C
+%% compares the memory usage 
+%% %of 4 systems 
+%% on RNAcentral-sampled sequences. 
+%% It 
+shows that  \rnafold and \contrafold use $O(n^2)$ space
+while \linearpartition uses $O(n)$.
+%% With increasing length, the two baselines require much more memory space than \linearpartition.
+
+
+%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%
+
+
+
+
+%\smallskip
+Now that we have established the speed of  \linearpartition,
+%in the next two subsections,
+we move on to the quality of its output.
+%i.e., the resulting Boltzmann distribution and base pairing probabilities.
+%% We first study the correlation with ground truth structures in Sec.~\ref{sec:corr},
+%% and then use base pairing probabilities for downstream structure predictions in Sec.~\ref{sec:acc}.
+
+\vspace{-.1cm}
+\subsection{Correlation with Ground Truth Structures}
+\label{sec:corr}
+
+% ensemble defect
+
+
+We use {\em ensemble defect}~\cite{Zadeh+:2010} (Fig.~\ref{fig:ensemble}A--B)
+to represent the quality of the Boltzmann distribution.
+It is the expected number of incorrectly predicted nucleotides over the whole ensemble at equilibrium,
+and formally,
+for a sequence \vecx and its ground-truth structure \vecystar, the ensemble defect is% $\Phi(\vecx,\vecystar)$ %denotes the average number of incorrectly paired nucleotides at equilibrium, and is formalized as:
+\begin{equation}
+%\begin{split}
+\vspace{-0.2cm}
+\Phi(\vecx,\vecystar) = \sum_{\vecy \in \mathcal{Y}(\vecx)} p(\vecy) \cdot d(\vecy, \vecystar) % \\ 
+%                 &= |\vecx| - 2 \sum_{(i,j) \in \mathrm{pairs(\vecystar)}} p_{i,j} - \sum_{j \in \mathrm{unpaired(\vecystar)}} q_{j}
+%\end{split}
+\label{eq:phi}
+\end{equation}
+where % $\phi$ is the folding model, 
+%  $\vecystar$ is the groud truth secondary structure, 
+%  $\mathcal{Y(\vecx)}$ is the ensemble of the sequence $\vecx$, 
+%  and $|\vecx|$ is the sequence length. % ($N+1$ is for conveniently describing unpaired bases);
+$p(\vecy)$ %=e^{-\frac{\Delta G^\circ(\vecy)}{RT}} / Q(\vecx)$
+is the probability of structure \vecy % of the structure $\vecy$ in the ensemble.
+in the ensemble %among all possible structures
+$\mathcal{Y(\vecx)}$,
+and $d(\vecy, \vecystar)$ is the distance between $\vecy$ and $\vecystar$, %,  defined as:
+defined as the number of incorrectly predicted nucleotides in \vecy:
+\vspace{-0.3cm}
+ \[% \begin{equation*}
+  \begin{split}
+    d(\vecy,\vecystar)=  |\vecx|  & - |\pairs(\vecy) \cap \pairs(\vecystar)|\\
+                        & - |\unpaired(\vecy) \cap\unpaired(\vecystar)|
+  \end{split}
+%  \label{eq:d}
+ \]% \end{equation*}
+ % \vspace{-0.2cm}
+%% where  $\pairs(\vecystar)$ is the set of base pairs in $\vecystar$,
+%% and $\unpaired(\vecystar)$ is the set of unpaired bases in $\vecystar$.
+ The na\"ive calculation of Eq.~\ref{eq:phi} requires enumerating all possible % (exponentially many)
+ structures in the ensemble, % which is intractable,
+  but by plugging $d(\vecy, \vecystar)$ %Eq.~\ref{eq:d}
+  into Eq.~\ref{eq:phi} % and with some derivations,
+  we have~\cite{Zadeh+:2010}
+\begin{equation}
+\vspace{-0.2cm}
+\begin{split}
+\Phi(\vecx,\vecystar) = |\vecx| - 2\!\! \sum_{(i,j) \in \pairs(\vecystar)} p_{i,j} - \sum_{j \in \unpaired(\vecystar)} q_{j} \notag
+\end{split}
+\label{eq:phi2}
+\vspace{-0.2cm}
+\end{equation}
+where $p_{i,j}$ is the probability of $i$ pairing with $j$ %, i.e., %(or the probability of $i$ being unpaired when $j=N+1$).
+%% \(%[
+%% p_{i,j} = \sum_{(i,j)\in \pairs(\vecy)} p(\vecy),
+%% \)
+and $q_{j}$ is the probability of $j$ being unpaired, i.e., $q_j = 1- \sum p_{i,j}$.
+  % $S_{i,j}(s)$ is the a structure matrix with entries $S_{i,j}(s) \in \{0, 1\}$, i.e., if structure $s$ contains pair $(i,j)$, then $S_{i,j}(s) = 1$, otherwise $S_{i,j}(s) = 0$.
+This means we can now use base pairing probabilities to compute the ensemble defect.
+
+%  $d(\vecy, \vecystar)$ is the distance between $\vecy$ and $\vecystar$,  defined as:
+
+\input{fig_examples}
+
+\input{fig_accuracy}
+
+Fig.~\ref{fig:ensemble}A--B employs ensemble defect to measure 
+the average number %(Fig.~\ref{fig:ensemble_defect}A) 
+%and ratio %(Fig.~\ref{fig:ensemble_defect}B) 
+of incorrectly predicted nucleotides over the whole ensemble (lower is better).
+% ~\cite{Dirks+:2004, Zadeh+:2010}.
+\viennarnafold and \linearpartition have similar ensemble defects for short sequences, % are mostly similar between , % are the same or similar,
+but \linearpartition has lower ensemble defects for longer sequences, esp.~16S and 23S rRNAs;
+in other words, \linearpartition's ensemble has less expected number of incorrectly predicted nucleotides
+(or higher number of correctly predicted nucleotides). %, i.e., better correlation with ground-truth structure).
+In particular, on 16S and 23S rRNAs, \linearpartition has on average 15.9 and 56.3 more correctly predicted nucleotides than \rnafold,
+and on average 8.3 more correctly predicted nucleotides over all families (Fig.~\ref{fig:ensemble}B).
+Figs.~\ref{fig:ensemble_defect} show the relative ensemble defects (normalized by sequence lengths),
+where the same observations hold, and \linearpartition has on avearge 0.4\% more correctly predicted nucleotides over all families.
+In both cases, the differences on tmRNA (worse) and Group I Intron (better) are statistically significant ($p<0.01$).
+
+
+
+This finding also implies that  \linearpartition's  base pairing probabilities 
+are on average higher than \rnafold's for ground-truth base pairs,
+and on average lower for incorrect base pairs.
+We use two concrete examples to illustrate this.
+First, we plot the ground truth structure of \ecoli 23S rRNA (2,904~\nts) in
+Fig.~\ref{fig:ensemble}C,
+and then plot the predicted base pairing probabilities
+from the local folding tool \viennarnaplfold (with default window size 70), \rnafold, and \linearpartition
+in Fig.~\ref{fig:ensemble}D--F, respectively.
+We can see that local folding can only produce local pairing probabilities,
+while \rnafold misses
+most of the long-distance pairs from the ground truth (except the 5'-3' helix),
+and includes many incorrect long-distance pairings (shown in red).
+By contrast, \linearpartition successfully predicts many
+long-distance pairings that \rnafold misses, the longest being 582~\nts apart (shown with arrows).
+Indeed, the ensemble defect of this example confirms that \linearpartition's ensemble distribution
+has on average 211.4 more correctly predicted nucleotides (over 2,904~\nts, or 7.3\%) than \rnafold's.
+
+As the second example, we use %an RNA sequence,
+{\it C.~ellipsoidea} Group I Intron (504~\nts).
+First, in Fig.~\ref{fig:ensemble}G--J, we plot the circular plots in the same style as the previous example,
+where \linearpartition is substantially better in predicting 4 helices in the ground-truth structure:
+[17,24]--[72,79], [30,45]--[66,71], [44,48]--[54,58], and [80,83]--[148,151] (annotated with blue arrows).
+%as an example to illustrate this.
+% show \linearpartition gives more accurate predicted secondary structure than \viennarnafold.
+%compare the base pairing probabilities generated by \viennarnafold and \linearpartition.
+Next, in Fig.~\ref{fig:example}A, 
+we plot the base pairs (in triangle) and unpaired bases (in circle) 
+with \rnafold probability on x-axis and \linearpartition probability on y-axis.
+We color the circles and triangles in blue where \linearpartition gives 0.2 higher probability 
+than \rnafold %gives low probabilities 
+(top left region),
+the opposite ones (bottom right region) in red,
+and the remainder (diagonal region, with probability changes less than 0.2)
+in green.
+Then in Fig.~\ref{fig:example}B,
+we visualize the ground truth structure~\cite{Cannone+:2002} and color the bases as in Fig.~\ref{fig:example}A.
+We observe that the majority of bases are in green, indicating that \rnafold and \linearpartition
+agree  with for a majority of the structure features. 
+But the blue helices (near 5'-end and [80,83]--[148,151], see also Fig.~\ref{fig:ensemble}J)
+indicate that \linearpartition favors these correct substructures by giving them higher probabilities than \rnafold.
+We also notice that all red features (where \rnafold does better than \linearpartition) are unpaired bases.
+This example shows that although \linearpartition and \rnafold give different probabilities, % compared with \rnafold, 
+it is likely that \linearpartition prediction structure is closer to the ground truth structure
+(which will be confirmed by downstream structure predictions in Section~\ref{sec:acc}).
+The ensemble defect of this example also confirms
+that \linearpartition has on average 47.1 more correctly predicted nucleotides (out of 504~\nts, or 9.3\%)
+than \rnafold.
+
+
+
+
+Fig.~\ref{fig:example}C gives the statistics of this example.
+We can see the green triangles in Fig.~\ref{fig:example}A, 
+which denote similar %base pairing
+probabilities between \rnafold and \linearpartition, 
+are the vast majority. % and the total number is 126,645.
+The total number of blue triangles,
+for which \linearpartition gives higher base pairing probabilities,
+is 55,
+and among them 23 %base pairs
+(41.8\%) are in the ground truth structure.
+On the contrary,
+56 triangles are in red,
+but none of these \rnafold prefered base pairs are correct. %in the ground truth structure.
+% Notice that all the red triangles are on $y=0$ line, 
+% for which \linearpartition gives 0 probabilities,
+% are in the ground truth structure.
+For unpaired bases, 
+\linearpartition also gives higher probabilities to more ground truth unpaired bases:
+there are 40 blue circles,
+among which 37 (92.5\%) are unpaired in the ground truth structure,
+while only 19 out of the 44 red circles (43.2\%) are in the ground truth structure.
+%% See also Fig.~\ref{fig:ensemble}G--J for another view of this example in the style of Fig.~\ref{fig:ensemble}C--F
+%% using circular plots.
+
+
+\vspace{-0.3cm}
+\subsection{Accuracy of Downstream Predictions}%  using Base Pairing Probabilities}
+\label{sec:acc}
+
+
+% \begin{figure}[t!]
+% \center
+% \begin{tabular}{cc}
+% \raisebox{2cm}{\panel{A}} & \includegraphics[scale=.7]{figs/new_MEA_diff_gamma_beam_inf_threshold_001} \\[-0.6cm]
+% \raisebox{2cm}{\panel{B}} &
+% \raisebox{-0.25cm}{\includegraphics[scale=.58]{figs/for_He_Zhang_MEA_gamma_B100}}\\[-0.6cm]
+% \raisebox{3cm}{\panel{C}} & \hspace{-0.5cm}\includegraphics[scale=.78]{figs/ProbKnot_PPV}\\[-0.4cm]
+% \raisebox{3cm}{\panel{D}} &\hspace{-0.5cm}\includegraphics[scale=.78]{figs/ProbKnot_Sens}
+
+% \end{tabular} % A: specify MFE in label
+% \caption{Accuracy comparison for two systems.
+% 	{\bf A}: Overall MFE and MEA structure PPV-sensitivity tradeoff of two systems with varying $\gamma$. 
+% 	{\bf B}: Overall ThreshKnot structure PPV-sensitivity tradeoff of two systems with varying threshold $p$.
+% 	{\bf C-D}: PPV and sensitivity comparison for each family.
+% 	\label{mea}
+% }
+% \end{figure}
+
+An important application of the partition function
+is to improve structure prediction accuracy (over MFE) using base pairing probabilities.
+%These downstream prediction methods include MEA\cite{do+:2006}, \centroidfold~\cite{sato+:2009}, \dotknot~\cite{Sperschneider+Datta:2010}, \probknot~\cite{bellaousov+mathews:2010}, and \ipknot~\cite{sato+:2011},
+%have been shown to outperform MFE in accuracy
+Here we use two such ``downstream prediction'' methods, MEA\cite{do+:2006} and \threshknot~\cite{Zhang+:2019} which is a thresholded version of \probknot~\cite{bellaousov+mathews:2010},
+and compare their results using base pairing probabilities from $O(n^3)$-time baselines and our $O(n)$-time \linearpartition.
+%We next consider the accuracy of downstream structure prediction using \linearpartition-produced 
+%% First we take base pairing probability matrices from \linearpartition and \viennarnafold (or \contrafold), 
+%% feed them to the standard MEA algorithm separately, 
+%% and compare the accuracies of prediction structures.
+We use Positive Predictive Value (PPV, the fraction of predicted pairs in the known structure, a.k.a.~precision) 
+and sensitivity (the fraction of known pairs predicted, a.k.a.~recall) 
+as accuracy measurements for each family,
+and get overall accuracy be averaging over families. 
+% We use slipping method{}
+When scoring accuracy, we allow base pairs to differ by one nucleotide in position~\cite{mathews+:1999}.
+% ~\cite{sloma+mathews:2016}
+We compare \rnafold and \linearpartitionv on the ArchiveII dataset in the main text, and provide the \contrafold vs.~\linearpartitionc comparisons
+in the Supporting Information Figs.~\ref{fig:mea_lpc}--\ref{fig:threshknot_lpc}.
+
+
+% Fig.~\ref{mea} shows that \linearpartition even leads to a small improvement in the downstream MEA predictoin using the probability matrix computed in linear time. 
+% Fig.~\ref{mea} gives the accuracy comparison between 
+Fig.~\ref{mea}A shows  
+MEA predictions (\rnafold + MEA and \linearpartition + MEA) are more accurate than MFE ones (\rnafold MFE and \linearfoldv),
+but more importantly,
+\linearpartition + MEA  consistently outperforms \rnafold + MEA in both PPV and sensitivity
+with the same $\gamma$, a hyperparameter that balances PPV and sensitivity in MEA algorithm.
+%\linearpartition + MEA enjoys a small improvement in both PPV and sensitivity.
+
+Figs.~\ref{mea}B--C detail the per-family PPV and sensitivity, respectively,
+for MFE and MEA ($\gamma=1.5$) results from Fig.~\ref{mea}A.
+% two MFE-based systems and two MEA-based systems for each family
+%% for MEA and MFE structures using \rnafold and our \linearfold and \linearpartition.
+%% % We can see
+%% The MEA
+%% % -based systems lead to accuracy improvements over MFE-based systems 
+%% structure predictions are more accurate than MFE predictions
+%% for most families.
+\linearpartition + MEA has similar PPV and sensitivity as \rnafold + MEA on short families (tRNA, 5S rRNA and SRP),
+but interestingly, is more accurate on longer families, especially the two longest ones, 16S rRNA (+0.86 on PPV and +1.29 on sensitivity) 
+and 23S rRNA (+0.88 on PPV and +0.62 on sensitivity). 
+%% We also performed a two-tailed permutation test to test the statistical significance, 
+%% and observed that on tmRNA the MEA structures of \linearpartition is significantly worse ($p<0.01$) than \viennarnafold in both PPV and Sensitivity.
+
+
+
+% ThreshKnot
+%% ProbKnot is another partition function-based structure prediction method that adds a straightforward post-processing step 
+%% % after partition function calculation
+%% of base pairing probabilities to predict structures
+%% and is simpler and faster than MEA~\cite{bellaousov+mathews:2010}.
+% Beyond nested structures, ProbKnot can predict pseudoknots. 
+\probknot is another downstream prediction method
+that is simpler and faster than MEA;
+it assembles 
+%In ProbKnot, structures are composed of
+base pairs with reciprocal highest pairing probabilities. 
+Recently, we demonstrated \threshknot~\cite{Zhang+:2019}, 
+a simple thresholded version of ProbKnot that only includes pairs that exceed the threshold, 
+leads to more accurate %overall 
+predictions that outperform MEA by filtering out unlikely pairs, i.e., those whose probabilities fall under a given threshold $\theta$.
+%% It has been shown ThreshKnot can achieve better PPV and Sensitivity than the more involved MEA algorithm, 
+%% % and can predict pseudoknots which is beyond MEA scope,
+%% so we also compare ThreshKnot structure accuracy between \viennarnafold and \linearpartition.
+
+
+Shown in Fig.~\ref{mea}E, \linearpartition + \threshknot is almost identical in overall accuracy %(slightly better in sensitivity)
+to \rnafold + \threshknot at all $\theta$'s,
+% in the downstream ThreshKnot prediction using the probability matrix computed in linear time.
+%Figs.~\ref{mea}E and F show that \linearpartition + ThreshKnot
+and is slightly better than the latter on long families
+(+0.24 on PPV and +0.38 on sensitivity for Group I Intron, +0.12 and +0.37 for telomerase RNA, and +0.74 and +0.62 for 23S rRNA)
+(Figs.~\ref{mea}F--G).
+We also performed a two-tailed permutation test to test the statistical significance, 
+and observed that on tmRNA, both MEA and \threshknot structures of \linearpartition are significantly worse ($p\!<\!0.01$) than their \rnafold-based counterparts in both PPV and Sensitivity.
+%As was observed for MEA comparison, \linearpartition + ThreshKnot is significantly worse ($p<0.01$) than \viennarnafold on tmRNA.
+%in PPV and Sensitivity.
+
+
+\input{fig_partition}
+
+Fig.~\ref{mea}D \& H show that \linearpartition-based predictions are subtantially better than \rnafold's (in both PPV and sensitivity) for long-distance base pairs (those with 500+ \nts apart),
+which are well known to be challenging for the current models.
+Fig.~\ref{fig:distance} details the accuracies on base pairs with different distance groups.
+
+
+Figs.~\ref{fig:mea_lpc}--\ref{fig:threshknot_lpc} show similar comparisons between 
+\contrafold and \linearpartitionc using MEA and ThreshKnot prediction, %, separately. 
+% Fig.~\ref{fig:mea_lpc} compares MEA structures ($\gamma>1.5$) accuracy based on these two systems and Fig.~\ref{fig:threshknot_lpc} compares ThreshKnot structures ($p>0.2$). 
+with similar results to Fig.~\ref{mea}, i.e., downstream structure prediction using \linearpartitionc is as accurate as using \contrafold, and  (sometimes significantly) more accurate on longer families.
+
+
+\input{fig_rmsd}
+
+
+\vspace{-0.2cm}
+\subsection{Approximation Quality (Default Beam Size)}
+
+\linearpartition uses beam pruning to ensure $O(n)$ runtime, % and linear space, % linearity, 
+thus is approximate compared with standard $O(n^3)$-time algorithms.
+% Fig. 4A–B show that our \linearpartition algorithm can indeed approximate the partition function reasonably well.
+We now investigate its approximation quality at the default beam size~100.
+
+First, in Fig.~\ref{fig:partition}, we measure the approximation quality of the partition function calculation,
+%and specifically,
+in particular,  the ensemble folding free energy change (also known as ``free energy of the ensemble'')
+which reflects the size of the partition function, 
+\[
+\ensenergy (\vecx) = -RT \log Q(\vecx).
+\]
+Fig.~\ref{fig:partition}A shows that the \linearpartition 
+% free energy of ensemble 
+estimate for the ensemble folding free energy change
+is close to the \rnafold estimate 
+on the ArchiveII dataset and randomly generated RNA sequences.
+The similarity shows that little magnitude of the partition function is lost by the beam pruning. 
+For short families, free energy of ensembles between \linearpartition and \rnafold are almost the same.
+For 16S and 23S rRNA sequences and long random sequences (longer than 900 nucleotides), 
+\linearpartition gives a lower magnitude ensemble free energy change, 
+but the difference,
+\[
+\ddg(\vecx) = \ensenergyvienna(\vecx) - \ensenergylinear(\vecx) \, \geq 0
+\]
+is smaller than 20 kcal/mol for 16S rRNA, 
+15 kcal/mol for 23S rRNA,
+and 37 kcal/mol for random sequences (Fig.~\ref{fig:partition}B). 
+The maximum difference for random sequence is larger than natural sequences (by 17.2 kcal/mol).
+This likely reflects the fact that random sequences tend to fold less selectively to probable structures~\cite{Fu+:2015},
+and the beam is therefore pruning structures in random that would contribute to the overall folding stability.
+% Fig.~\ref{ensemble} confirms \linearpartition approximation quality of partition function is good.
+Fig~\ref{fig:partition}C shows the ``relative'' differences in ensemble free energy changes,
+ ${\ddg(\vecx)}/{\ensenergyvienna(\vecx)}$,
+are also very small: only up to 2.5\% and 1.5\% for 16S and 23S rRNAs, and up to 4.5\% for random sequences.
+
+
+
+Next, in Fig.~\ref{fig:rmsd}, we measure the approximation quality of base pairing probabilities using root-mean-square deviation (\RMSD)
+between two probability matrices $p$ %(from cubic algorithms, for example, \viennarnafold) 
+and $p'$ %(from our algorithm, for example, \linearpartition)
+%(i.e., $p_\vienna$ and $p_\linear$)
+over the set of all possible Watson-Crick and wobble pairs on a sequence $\vecx$.
+We  define
+\begin{equation}
+  \vspace{-0.4cm}
+\begin{split}
+  {\pairings}(\vecx) \!=\!\{  &1\leq i <j\leq |\vecx| \bigm\vert j-i>3 \\[-0.1cm]
+    &  \vecx_i\vecx_j \in \{\text{\small CG, GC, AU, UA, GU, UG}\}\!\} \notag
+\end{split}
+\end{equation}
+\vspace{-0.2cm}
+and:\vspace{-0.05cm} 
+\begin{equation}
+\RMSD(p,p')\!=\!\!\!\sqrt{\frac{1}{|{\pairings}(\vecx)|} \sum_{(i,j) \in {{\pairings}(\vecx)}}{\!\!\!\!\!(p_{i,j}\!-\!p'_{i,j})}^2}\notag
+\end{equation}
+
+\input{fig_beamsize}
+
+Figs.~\ref{fig:rmsd}A and B confirm that our \linearpartition algorithm (with default beam size 100) can indeed approximate the base pairing probability matrix reasonably well. 
+Fig.~\ref{fig:rmsd}A shows the heatmap of probability matrices for {\it E.~coli} tRNA$^\textit{Gly}$. 
+\rnafold (lower triangle) and \linearpartition (upper triangle)
+yield identical matrices (i.e., $\RMSD=0$). % (i.e., RMSD$\approx$0). 
+Fig.~\ref{fig:rmsd}B shows that the \RMSD of each sequence in ArchiveII and RNAcentral datasets, 
+and randomly generated artificial RNA sequences, %with length 100–16,000~\nts.
+is relatively small. % across all sequences. 
+% To verify approximation quality of 
+The highest deviation is 0.065 for {\it A.~truei} RNase P RNA, 
+which means on average 
+each base pair's probability deviation in that worst-case sequence is about 0.065 between the cubic algorithm (\rnafold) and our linear-time one (\linearpartition). 
+On the longest 23S rRNA family, the \RMSD is about 0.015. 
+We notice that tmRNA is the family with biggest average \RMSD. %, and its accuracy is also the worst.
+The random RNA sequences behave similarly to natural sequences in terms of \RMSD, 
+i.e., \RMSD is  close to 0 ($\!<\!10^{-5}$) for short ones, then becomes bigger around length 500 and decreases after that, 
+but for most cases their \RMSD's are slightly larger than  
+the natural sequences. %in similar length range.
+This indicates that the approximation quality is relatively better for natural sequences.
+For RNAcentral-sampled sequences, \RMSD's are all small and around 0.01.
+
+% With sequence length increasing, RMSD gradually decreases, 
+% since the number of possible pairs grows in $O(n^2)$ but the number of highly probable pairs grows in $O(n)$. 
+% To avoid RMSD is dominented by most base pairs with small probabilities,
+% we consider a more strict circumstance. 
+% Instead of divided by the number of all possible base pairs,
+% We only consider the ones which have probability $p>0.01$.
+% The RMSD resutls with such constrain are presented in Fig.~\ref{fig:rmsd_threshold}.
+% It shows that for sequence shorter than 300$nt$, RMSD($p>0.01$) is still 0. 
+% This also confirms that our \linearpartition gives exactly the same probability matrix as cubic algorithm.
+% RMSD($p>0.01$) fluctuates from 0 to about 0.43 for sequences whose lengthes are in the range [300,1000]. Beyond 1,000$nt$, RMSD($p>0.01$) becomes stable between 0.2 and 0.4.
+
+
+
+% Fig.~\ref{fig:rmsd}C and D show
+We hypothesize that \linearpartition reduces the uncertainty of the output  distributions %(both base pairing probabilities distribution
+%is shifted to higher probability 
+because it filters out states with lower partition function.
+We measure this using average positional structural entropy $H(p)$, %$~\cite{Garcia-Martin+Clote:2015}, 
+% which is defined as:
+which is the average of positional structural entropy $H_2(i)$ for each nucleotide $i$~\cite{Huynen+:1997,Garcia-Martin+Clote:2015}:
+\vspace{-0.2cm}
+\begin{equation}
+  \vspace{-0.3cm}
+\begin{split}
+H(p) &= \frac{1}{n}\sum_{i=1}^{n}{H_2(i)} =\frac{1}{n}\sum_{i=1}^{n}({-\sum_{j=0}^{n}p_{i,j}\mathrm{log}_{2}p_{i,j}}) \\
+		&=-\frac{1}{n}\sum_{i=1}^{n}{\sum_{j=0}^{n}p_{i,j}\mathrm{log}_{2}p_{i,j}} \notag
+\end{split}
+\end{equation}
+where $p$ is the base pairing probability matrix,
+% in which 
+%$p_{i,j}$ is the probability of nucleotide $i$ paired with $j$ when $j\neq 0$, 
+and $p_{i,0}$ is the probability of nucleotide $i$ being unpaired ($q_i$ in Eq.~\ref{eq:phi}).
+%$n$ is the sequence length.
+The lower entropy indicates that the distribution is dominated by fewer base pairing probabilities.
+Fig.~\ref{fig:rmsd}C confirms \linearpartition distribution shifted to higher probabilities (lower average entropy) than \rnafold for most sequences.
+
+Fig.~\ref{fig:rmsd}D uses \ecoli 23S rRNA to exemplify the difference in base pairing probabilities.
+We sort all these probabilities from high to low and take the top 3,000.
+The \linearpartition curve starts higher and finishes lower, confirming a lower entropy. %the distribution shifts to higher probabilities. % (rich get richer).
+
+
+
+% E F
+Figs.~\ref{fig:rmsd}E and F follow a previous analysis method~\cite{Zuber+:2017} to estimate the approximation quality with a different perspective. 
+We divide the base pairing probabilities range [0,1] into 100 bins, i.e., the first bin is for base pairing probabilities [0,0.01), and the second is for [0.01, 0.02), so on so forth. 
+In Fig.~\ref{fig:rmsd}E we visualize the averaged change of base pairing probabilities between \rnafold and \linearpartition for each bin.
+We can see that larger probability changes are in the middle (bins with probability around 0.5),
+and smaller changes on the two sides (with probability close to either 0 or 1).
+%while both on the left (bins with probability near 0) and on the right (bins with probability near 1) the changes are smaller.
+In Fig.~\ref{fig:rmsd}F we illustrate the counts in each bin based on \rnafold base pairing probabilities.
+We can see that most base pairs have low probabilities (near 0) or very high probabilities (near 1).
+Combine Figs.~\ref{fig:rmsd}E and F together, we can see that probabilities of most base pairs are near 0 or 1, where the differences between \rnafold and \linearpartition are relatively small. 
+Fig.~\ref{fig:bin_counts} provides the comparison of counts in each bin between \rnafold and \linearpartitionv. The count of \linearpartitionv in bin [99,100) is slightly higher than \rnafold, 
+while the counts in bins near 0 (being capped at 50,000) are much less than \rnafold.
+This  also confirms that \linearpartition prunes base pairs with tiny probabilities.
+
+
+
+\vspace{-0.4cm}
+\subsection{Adjustable Beam Size}
+
+Beam size in \linearpartition is a user-adjustable hyperparameter controlling beam prune, 
+and it balances the approximation quality and runtime.
+A smaller beam size shortens runtime, but sacrifices approximation quality.
+With increasing beam size, \linearpartition gradually approaches the classical $O(n^3)$-time algorithm and 
+the output is finally identical to the latter when the beam size is $\infty$ (no pruning).
+Fig.~\ref{fig:beamsize}A shows the changes in approximation quality of the ensemble free energy change,
+$\Delta G^\circ_\text{ensemble}(\vecx)$, with $b=20\rightarrow 800$.
+Even with a small beam size ($b=20$) the difference is only about 5\%, which quickly shrinks to 0 as $b$ increases.
+Fig.~\ref{fig:beamsize}B shows the changes in \RMSD with changing $b$. %=20\rightarrow 800$.
+% We use averaged length and averaged RMSD for each family with a certain beam size.
+%We observe that \RMSD decreases when beam size increases. 
+With a small beam size $b=20$ the average \RMSD is lower than 0.035
+over all ArchiveII sequences,
+which shrinks to less than 0.005 at the default beam size ($b=100$),
+and almost 0 with $b=500$.% the average \RMSD is
+% and tmRNA remains relatively high averaged RMSD compared with other short families.
+% This is consistant with Fig.~\ref{fig:rmsd}B.
+%% With a larger beam size, $b=500$, 
+%% % which means no beam prune for partition function calculation, 
+%% the average \RMSD decreases to almost 0.
+% It is also clear that shorter families' averaged RMSD decreases faster. 
+
+
+Beam size also has impact on PPV and Sensitivity.
+Fig.~\ref{fig:beamsize}C gives the overall PPV and Sensitivity changes with beam size.
+We can see both PPV and Sensitivity improve from $b=50$ to $b=100$,
+and then become stable beyond that.
+%Therefore, we choose beam size 100 as the default beam size.
+Figs.~\ref{fig:beamsize}D and E present this impact for two selected families.
+% tmRNA is the worst family in the sense of accuracy for \linearpartition.
+Fig.~\ref{fig:beamsize}D shows tmRNA's PPV and Sensitivity both increase when enlarging beam size.
+Using beam size 200, \linearpartition achieves similar PPV and Sensitivity as \rnafold.
+% This indicates that it is better to use a larger beam size, for example, $b=200$ when running 
+% \linearpartition on tmRNA sequence.
+However, increasing beam size is not benefical for all families.
+% especially for long families.
+Fig.~\ref{fig:beamsize}E gives the counterexample of 16S rRNA. 
+We can see both PPV and Sensitivity decrease with $b$ from 50 to 100.
+After that, Sensitivity drops with no PPV improvement.
+% PPV increases while Sensitivity decreases when changing beam size from 100 to 120. 
+% Continue increasing beam size, Sensitivity drops with no PPV improvement.
+
+\smallskip
+% discussion about k-best parsing
+\linearfold uses $k$-best parsing~\cite{huang+:2005} to reduce runtime from $O(nb^2)$ to $O(nb{\mathrm {log}}b)$ without losing accuracy.
+% Basically, $k$-best parsing is to find the top-$k$ states 
+% The reason of the difference is that 
+Basically, 
+$k$-best parsing is to find the exact top-$k$ (here $k\!=\!b$) states out of $b^2$ candidates
+% with no need of approximation
+in $O(b{\mathrm {log}}b)$ runtime.
+%by using a heap.
+% instead of .
+% while the naive algorithm needs to 
+If we applied $k$-best parsing here,
+\linearpartition would sum the partition function of only these top-$b$ states
+instead of the partition function of $b^2$ states.
+This change would introduce a larger approximation error,
+especially when the differences of partition function between the top-$b$ states 
+and the following states near the pruning boundary are small.
+Therefore, in \linearpartition we do not use $k$-best parsing as in \linearfold,
+and the runtime is $O(nb^2)$ instead of $O(n b\log b)$.
+% For \linearfold, since it only needs to predict one MFE structure,
+% the rest candidates are much less promising to be part of the MFE structure.
+% However, \linearpartition needs to consider the ensumble at equilibrium, 
+% so the partition function of the candidate states may also make unneglactable contributions to total partition function.
+
+% \begin{figure}[b]
+% \center
+% \includegraphics[width=0.48\textwidth]{figs/RMSD_beamsize}
+% \caption{
+% Impact of beam size. Add beamsize-accuracy figures???
+% 	\label{fig:beamsize}.
+% }
+% \end{figure}
+
+
+
+%\subsection{Example}
+
+
+Finally, we note that the default beam size $b\!=\!100$ follows \linearfold and %is a simple round number;
+we do not tune it.

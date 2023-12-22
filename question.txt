@@ -1,0 +1,50 @@
+1. what is a good way to illustrate the method
+
+2. Introduction
+	2.1 figure
+	ensemble: show a ribol switch or a good switch??
+	stotastical sampling from distribution
+
+	better: prob. tells about ensemble (motivation)
+
+	even for coding RNA. mRNA thousands structures 
+	protein binding site (mRNA)
+	RNA structure decides the binding site.
+	RNA turn over, decay
+
+	paper reading
+
+	in linear time capture ... 
+
+	number of information/states
+
+
+3. Results
+	first add figure to visulize algorithm
+	added free energy of ensemble followed runtime 
+
+	search quality -> approximation quality (*)
+
+	3.1 runtime: add longer sequence from RNAcentral -Yes
+	3.2 show both MEA and ProbKnot results in main or one in SI.
+	3.3 A better way to show example?
+	3.4 any other results which should be added
+
+
+	efficiency -> accuracy (has gold standard) -> approximation quality 
+	use matrix to ensemble structure 
+
+	accuracy: use threshknot, include in SI. discribe the correlations
+
+	accuracy bar plots: remove MFE (kept)
+
+	RMSD figure: what is the accuracy of the outlayer
+
+	identify region ??
+	correlation (within family) between entropy and RMSD
+
+	gutell: compare of rna website
+
+4. title?
+
+Lineartition: Linear-Time Approximation of RNA Folding Partition Function and Base Pair Probabilities (*)

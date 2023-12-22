@@ -1,0 +1,158 @@
+% !TEX root = \main.tex
+\vspace{-.4cm}
+\section{Discussion}
+\vspace{-0.1cm}
+
+\subsection{Summary}
+% In this paper, we present LinearPartition, which inherits LinearFold main idea and applies it to partition function and base pairing probability calculation, and leads to a small accuracy improvement in both linear runtime and linear memory space. 
+% LinearPartition reduces classical cubic runtime by pruning states with lower energy. 
+% Although it filters some substructure, but only the ones with worse free energy are given up, and results in a similar partition function as exact search. 
+% LinearPartition is 10× faster than Vienna RNAfold for the longest sequence (about 3000 nucleotides) in the dataset. 
+% Not only being fast, LinearPartition is as accurate as Vienna RNAfold when comparing MEA and ProbKnot output structure. 
+% Surprisingly, even though LinearPar- tition uses an inexact search, it achieves better accuracy on longer families (16S and 23S rRNA).
+
+The classical McCaskill (1990) algorithm for partition function and base pairing probabilities calculations 
+are widely used in many studies of RNA sequences, 
+but its application has been impossible for long sequences 
+(such as full length mRNA)
+due to its cubic runtime.
+%because of the limitation imposed by their cubic scaling.
+To address this issue, we present LinearPartition, a linear-time algorithm that dramatically reduces the runtime without sacrificing output quality. % of partition function and base pairing probabilities calculations.
+We confirm that:
+\begin{enumerate}
+  \vspace{-0.2cm}
+  \setlength{\itemsep}{0pt}
+ \item 
+ \linearpartition takes only linear runtime and memory usage, and is orders of magnitude faster on longer sequences (Fig.~\ref{fig:runtime}); %, for example, 
+% about 11$\times$ faster than \viennarnafold on {\it H.~pylori} 23S rRNA (2,968~{\it nt}). 
+%For example, it enjoys a 2,771$\times$ speedup (2.5 days vs.~1.3~min.)
+%over \contrafold on the longest sequence (32,753~{\it nt}) that \contrafold can run in the RNAcentral dataset (Fig.~\ref{fig:runtime}).
+ \item
+ The base pairing probabilities produced by \linearpartition are better correlated with the ground truth structures on average (Figs.~\ref{fig:ensemble}--\ref{fig:example}); 
+% For instance, 
+% \linearpartition's ensemble distribution leads to 211.4 (7.3\%) more correctly predicted nucleotides %decrease in ensemble defect
+% on \ecoli 23S rRNA compared with \viennarnafold, 
+% and 47.1 (9.3\%) more on {\it C.~ellipsoidea} Group I Intron 
+% (Figs.~\ref{fig:ensemble} and~\ref{fig:example}).
+ \item
+When used with downstream structure prediction methods such as MEA and ThreshKnot,
+  LinearPartition's base pair probabilities have similar overall accuracy (or even a small improvement on MEA structures) compared with \rnafold,
+  as well as better accuracies on longer families and long-distance base pairs (Fig.~\ref{mea});
+%   and slightly better accuracies on longer families. 
+% \linearpartition is also substantially better on long-distance base pairs (500+~\nts apart) in both MEA and ThreshKnot predictions (Fig.~\ref{mea}).
+\item
+ \linearpartition has a reasonable approximation quality (Figs.~\ref{fig:partition}--\ref{fig:rmsd}) in terms of \RMSD. 
+ 
+%and can serve multiple downstream tasks.
+% Although filtering out some structures, the ensemble free energy change of \linearpartition is either the same or only slightly smaller than \viennarnafold
+% e.g., the largest fraction of total free energy change is 2.5\% in the ArchiveII dataset 
+% (Fig.~\ref{fig:partition}).  
+% Additionally, RMSD of base pairing probabilities between \linearpartition and \viennarnafold is small 
+% e.g., the largest RMSD in the ArchiveII dataset is 0.065 
+% (Fig.~\ref{fig:rmsd}).
+% \item
+ % (5) With increasing beam size, \linearpartition gradually approaches the classical McCaskill algorithm;
+ %  both the difference in ensemble free energy change and RMSD quickly shrink to 0 (Fig.~\ref{fig:beamsize}).
+%  and eventually produces identical outputs.
+%%   averaged RMSD decreases. The change is more pronunced from beam size 20 to 100. 
+%% Above 100, averaged RMSD is smaller than 0.05, and overall PPV and Sensitivity are stable. 
+%% For tmRNA, PPV and Sensitivity increase with beam size and are very close to \viennarnafold at beam size 200. 
+%% % Other families, especially for long families such as 16S rRNA, accuracy may drop when increase beam size.
+%% But for 16S rRNA, accuracy drops with an increase beam size (Fig.~\ref{beamsize}).
+ \end{enumerate}
+
+  % \subsection{Analysis}
+%  \smallskip
+\vspace{-0.2cm}
+There are two possible reasons why our approximation 
+results in better base pairing probabilities: 
+%in the sense of correlating with ground truth structure:
+\begin{enumerate}
+  \vspace{-0.2cm}
+  \setlength{\itemsep}{0pt}%
+ 
+\item
+  This is consistent with the findings in \linearfold, where
+  approximate folding via beam search yields more accurate structures.
+
+
+%% It has been studied that 
+%% a structure containing 86.1\% of the ground truth base pairs can be found
+%% in a free energy gap of 4.8\% from the optimal structure~\cite{zuker+:1991,mathews+:1999}.
+%% With well-designed heuristic,
+%% \linearpartition captures the bulk of the free energy of the ensemble, 
+%% especially sums up the suboptimal structures within a small gap from the MFE structure.
+
+\item
+%% Classical partition function sums up all possible secondary structures,
+%% but in reality not all these structures exists at equilibrium.
+\linearpartition's pruning of low-probability (sub)structures
+has a ``regularization'' effect.
+It eliminates some noise in the current energy model 
+which is highly inaccurate, especially for long-distance interactions.
+\end{enumerate}
+
+\vspace{-0.2cm}
+The success of \linearpartition is arguably more striking than \linearfold,
+since the former needs to sum up exponentially many structures
+that capture the bulk part of the ensemble free energy,
+while the latter only needs to find one single optimal structure.
+
+\vspace{-0.2cm}
+\subsection{Extensions}
+
+Our work has potential extensions.
+\begin{enumerate}
+  \vspace{-0.2cm}
+  \setlength{\itemsep}{0pt}%
+\item 
+% Many ncRNAs function by interacting with other RNA sequences by base pairing.
+  Existing methods and tools for % these problems
+  bimolecular and multistrand 
+  base pairing probabilities as well as accessibility computation % could be accelerated and improved.
+%calculating two-strand (bimolecular) or multi-strand folding partition functions and
+%base pairing probability matrices
+\cite{chitsaz+:2009, bernhart+:2006b, Dirks+:2007, DiChiacchio+:2016} are rather slow, %suffer from slowness, 
+which limits their applications on long sequences. 
+\linearpartition will likely provide a much faster solution for these problems. 
+% and will have immediate impact on the ability to predict bimolecular or multi-strand structures 
+% and also providing additional structure information (both intra- and inter-molecular pairs) to users.
+
+\item 
+We will linearize the partition function-based heuristic methods for pseudoknot prediction such as 
+% ProbKnot, 
+IPknot and Dotknot. 
+These heuristic methods use rather simple criteria to choose pairs from the base pairing probability matrix,
+and their runtime bottleneck is $O(n^3)$-time calculation of the base pairing probabilities.
+% For example, 
+% IPknot %first computes base pairing probabilities 
+% selects base pairs by solving an Integer Linear Program (ILP)
+% to maximize the total probabilities of chosen pairs
+% with well-designed constrains.
+% Actually the first step of computing base pairing probabilities
+% takes the vast majority of total computation time; e.g., on 23S rRNAs it accounts for 99.3\% of total time. % takes much more time.
+% This might appear as $O(n^2)$ in the worst case, 
+% but since the linear-time beam search used in \linearpartition only returns $O(nb)$ pairs where $b$ is the constant beam size, 
+% this second step is still $O(n)$, 
+% giving an overall linear-time method, LinearProbKnot. 
+With \linearpartition we can overcome the costly bottleneck %$O(n^3)$-time computation
+and get an overall much faster tool. %, such as IPknot or FastDotKnot.
+% We can similary get FastDotKnot, etc.
+% With the promising results of \linearpartition, 
+% we believe \linearpartition-powered IPknot (or DotKnot) might be as accurate as, 
+% if not more accurate than, 
+% their original $O(n^3)$ versions.
+
+\item 
+We can also speed up stochastic sampling of RNA secondary structures from Boltzmann distribution.
+The standard stochastic sampling algorithm runs in worst-case $O(n^2)$ time~\cite{Ding+Lawrence:2003},
+but relies on the classical $O(n^3)$ partition function calculation.
+% The slowness of 
+% which becomes the bottleneck for sampling on long sequences.
+With \linearpartition, 
+we can apply stochastic sampling to full length sequences such as mRNAs, 
+and compute their accessbility based on sampled structures.
+
+\end{enumerate}
+
+

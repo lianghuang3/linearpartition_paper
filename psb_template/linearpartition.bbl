@@ -1,0 +1,137 @@
+\begin{thebibliography}{10}
+
+\bibitem{Eddy:2001}
+S.~R. Eddy., Non-coding {RNA} genes and the modern rna world., {\em Nature
+  Reviews Genetics} {\bf 2}, 919  (2001).
+
+\bibitem{Kung+:2013}
+J.~T.~Y. Kung, D.~Colognori and J.~T. Lee., Long noncoding rnas: Past, present,
+  and future., {\em Genetics} {\bf 193}, 651  (2013).
+
+\bibitem{stephens+:2015}
+Z.~D. Stephens, S.~Y. Lee, F.~Faghri, R.~H. Campbell, C.~Zhai, M.~J. Efron,
+  R.~Iyer, M.~C. Schatz, S.~Sinha and G.~E. Robinson, Big data: astronomical or
+  genomical?, {\em PLoS Biology} {\bf 13}, p. e1002195  (2015).
+
+\bibitem{mccaskill:1990}
+J.~S. McCaskill, The equilibrium partition function and base pair probabilities
+  for rna secondary structure, {\em Biopolymers} {\bf 29}, 11105  (1990).
+
+\bibitem{Tinoco+Bustamante:1999}
+I.~T. Jr and C.~Bustamante., How {RNA} folds, {\em Journal of Molecular
+  Biology} {\bf 293}, 271  (1999).
+
+\bibitem{tinoco+:1971}
+I.~TINOCO, O.~C. UHLENBECK and M.~D. LEVINE, Estimation of secondary structure
+  in ribonucleic acids, {\em Nature} {\bf 230}, 362  (1971).
+
+\bibitem{auron+:1982}
+P.~E.Auron, W.~P.Rindone, C.~P. Vary, J.~J. Celentano and J.~N. Vournakis,
+  Computer-aided prediction of rna secondary structures, {\em Nucleic Acids
+  Research} {\bf 10}, 403  (1982).
+
+\bibitem{nussinov+jacobson:1980}
+R.~Nussinov and A.~B. Jacobson, Fast algorithm for predicting the secondary
+  structure of single-stranded {RNA}, {\em Proceedings of the National Academy
+  of Sciences} {\bf 77}, 6309  (1980).
+
+\bibitem{zuker+stiegler:1981}
+M.~Zuker and P.~Stiegler, Optimal computer folding of large {RNA} sequences
+  using thermodynamics and auxiliary information, {\em Nucleic Acids Research}
+  {\bf 9}, 133  (1981).
+
+\bibitem{mathews:2004}
+D.~H. Mathews., Using an {RNA} secondary structure partition function to
+  determine confidence in base pairs predicted by free energy minimization.,
+  {\em {{RNA}}} {\bf 10}, 1178  (2004).
+
+\bibitem{lai+:2018}
+W.-J.~C. Lai, M.~Kayedkhordeh, E.~V. Cornell, E.~Farah, S.~Bellaousov,
+  R.~Rietmeijer, D.~H. Mathews and D.~N. Ermolenko, m{RNA}s and lnc{RNA}s
+  intrinsically form secondary structures with short end-to-end distances, {\em
+  Nature Communications} {\bf 9}, p. 4328  (2018).
+
+\bibitem{ding+:2005}
+Y.~Ding, C.~Y. Chan and C.~E. Lawrence, {RNA} secondary structure prediction by
+  centroids in a boltzmann weighted ensemble, {\em {RNA}} {\bf 11}, 1157
+  (2005).
+
+\bibitem{mathews:2006}
+D.~H. Mathews, Revolutions in {RNA} secondary structure prediction, {\em
+  Journal of molecular biology} {\bf 359}, 526–  (2006).
+
+\bibitem{Zuber+:2018}
+J.~Zuber, B.~J. Cabral, I.~McFadyen, D.~M. Mauger and D.~H. Mathews, Analysis
+  of {RNA} nearest neighbor parameters reveals interdependencies and quantifies
+  the uncertainty in {RNA} secondary structure prediction, {\em {RNA}} {\bf
+  24}, 1568  (2018).
+
+\bibitem{do+:2006}
+C.~Do, D.~Woods and S.~Batzoglou, {CONTRA}fold: {RNA} secondary structure
+  prediction without physics-based models, {\em Bioinformatics} {\bf 22}, e90
+  (2006).
+
+\bibitem{lu+:2009}
+Z.~J. Lu, J.~W. Gloor and D.~H. Mathews, Improved {RNA} secondary structure
+  prediction by maximizing expected pair accuracy, {\em {RNA}} {\bf 15}, 1805
+  (2009).
+
+\bibitem{Ren+:2005}
+J.~Ren, B.~Rastegari, A.~Condon and H.~H. Hoos, Hotknots: heuristic prediction
+  of {RNA} secondary structures including pseudoknots, {\em {RNA}} {\bf 11},
+  1494–  (2005).
+
+\bibitem{bellaousov+mathews:2010}
+S.~Bellaousov and D.~H. Mathews, Probknot: fast prediction of {RNA} secondary
+  structure including pseudoknots, {\em RNA} {\bf 16}, 1870  (2010).
+
+\bibitem{Sperschneider+Datta:2010}
+J.~Sperschneider and A.~Datta, Dotknot: pseudoknot prediction using the
+  probability dot plot under a refined energy model, {\em Nucleic Acids
+  Research} {\bf 38}, e103  (2010).
+
+\bibitem{Sato+:2011}
+K.~Sato, Y.~Kato, M.~Hamada, T.~Akutsu and K.~Asai, {IP}knot: fast and accurate
+  prediction of rna secondary structures with pseudoknots using integer
+  programming, {\em Bioinformatics} {\bf 27}, i85–  (2011).
+
+\bibitem{mathews+turner:2006}
+D.~H. Mathews and D.~H. Turner, Prediction of {RNA} secondary structure by free
+  energy minimization, {\em Current Opinion in Structural Biology} {\bf 16},
+  270  (2006).
+
+\bibitem{lorenz+:2011}
+R.~Lorenz, S.~H. Bernhart, C.~H. Zu~Siederdissen, H.~Tafer, C.~Flamm, P.~F.
+  Stadler and I.~L. Hofacker, Vienna{RNA} package 2.0, {\em Algorithms for
+  Molecular Biology} {\bf 6}, p.~1  (2011).
+
+\bibitem{Huang+:2019}
+L.~Huang, H.~Zhang, D.~Deng, K.~Zhao, K.~Liu, D.~A. Hendrix and D.~H. Mathews,
+  {LinearFold: linear-time approximate RNA folding by 5'-to-3' dynamic
+  programming and beam search}, {\em Bioinformatics} {\bf 35}, i295 (07 2019).
+
+\bibitem{Huang+Sagae:2010}
+L.~Huang and K.~Sagae, Dynamic programming for linear-time incremental parsing,
+  in {\em Proceedings of ACL 2010\/},  ({ACL}, Uppsala, Sweden, 2010).
+
+\bibitem{mathews+:1999}
+D.~H. Mathews, J.~Sabina, M.~Zuker and D.~H. Turner, Expanded sequence
+  dependence of thermodynamic parameters improves prediction of {RNA} secondary
+  structure, {\em Journal of molecular biology} {\bf 288}, 911  (1999).
+
+\bibitem{sloma+mathews:2016}
+M.~Sloma and D.~Mathews, Exact calculation of loop formation probability
+  identifies folding motifs in {RNA} secondary structures, {\em {RNA}, 22,
+  1808--1818}   (2016).
+
+\bibitem{Huynen+:1997}
+M.~Huynen, R.~Gutell and D.~Konings, Assessing the reliability of {RNA} folding
+  usingstatistical mechanics, {\em Journal of molecular biology} {\bf 267},
+  1104  (1997).
+
+\bibitem{DiChiacchio+:2016}
+L.~DiChiacchio, M.~F. Sloma and D.~H. Mathews., Accessfold: predicting
+  {RNA}-{RNA} interactions with consideration for competing self-structure,
+  {\em Bioinformatics} {\bf 32}, 1033–  (2016).
+
+\end{thebibliography}

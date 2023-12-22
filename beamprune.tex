@@ -1,0 +1,44 @@
+% \documentclass[1pt]{article}
+\documentclass[preview]{standalone}
+% \documentclass[border=2pt]{standalone}
+\usepackage[a5paper]{geometry}
+
+\title{algorithm}
+
+\usepackage{algpseudocode}
+\algtext*{EndFor}% Remove "end while" text
+\algtext*{EndIf}% Remove "end if" text
+\algtext*{EndFunction}% Remove "end if" text
+\algtext*{EndProcedure}% Remove "end procedure" text
+% \usepackage[options ]{algorithm2e}
+
+\newcommand{\pluseq}{\mathrel{+}=}
+\let\oldReturn\Return
+\renewcommand{\Return}{\State\oldReturn}
+
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+
+\begin{document}
+
+% LinearPartition Algorithm: Simplified Version
+\begin{algorithmic}[1]
+
+
+\Procedure{beamprune}{$Q, j, b$}
+    \State $cands \gets$ hash() \Comment{hash table: from candidates $i$ to score}
+    \ForEach{key $(i,j)$ in $Q$}
+        \State $cands(i) \gets Q(0,i) \cdot Q(i,j)$ \Comment{$Q(0,i) $ as prefix score}
+    \EndFor
+    \State $cands \gets \textsc {SelectTopB}(cands, b)$ \Comment{select top-$b$ by score}
+    \ForEach{key $(i,j)$ in $Q$}
+        \If{key $i$ not in $cands$}
+            \State delete $(i,j)$ in $Q$ \Comment{prune out low-scoring states}
+        \EndIf
+    \EndFor
+\EndProcedure
+        
+\end{algorithmic}
+% \end{algorithm}
+
+\end{document}

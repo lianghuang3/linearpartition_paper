@@ -1,0 +1,147 @@
+% !TEX root = main.tex
+
+% \setcounter{figure}{0}
+% \renewcommand{\thefigure}{Online Method \arabic{figure}}
+% \setcounter{table}{0}
+% \renewcommand{\thetable}{Online Method \arabic{table}}
+
+\section*{Methods}
+
+\small
+
+\subsection*{Datasets}
+
+We use sequences from two datasets, ArchiveII and RNAcentral.
+The archiveII dataset 
+(available in \url{http://rna.urmc.rochester.edu/pub/archiveII.tar.gz}) is % \cite{sloma+mathews:2016}, 
+a diverse set with 3,857 RNA sequences and their secondary structures.
+It is first curated in the 1990s to contain sequences with structures that were well-determined by comparative sequence analysis~\cite{mathews+:1999}% [72] 
+and updated later with additional structures~\cite{sloma+mathews:2016}. % [96].  
+% and is available in \url{http://rna.urmc.rochester.edu/pub/archiveII.tar.gz}.
+We remove 957 sequences that appear both in the ArchiveII and the S-Processed datasets~\cite{Andronescu+:2007}, because CONTRAfold uses S-Processed for training. 
+We also remove all 11 Group II Intron sequences 
+because there are so few instances of these that are available electronically.
+Additionally, we removed 30 sequences in the tmRNA family because the annotated structure for each of these sequences contains fewer than 4 pseudoknots, 
+which suggests the structures are incomplete. 
+These preprocessing steps lead to a subset of ArchiveII with 2,859 reliable secondary structure 
+% RNA sequence and structure pairs 
+examples 
+distributed in 9 families. 
+See~\ref{tab:archiveII} for the statistics of the sequences we use in the ArchiveII dataset.
+% But since CONTRAfold (v2.02) machine-learned model is trained on the S-Processed dataset \cite{},
+% we removed those overlap sequences. 
+% As in \linearfold paper, we also remove those sequences CONTRAfold (v2.02) used for training.
+% The remaining dataset contains 2889 RNA sequences from 9 families, 
+% with average length 222 $nt$ and max length 2968 $nt$.
+Moreover, we randomly sampled 22 longer RNA sequences (without known structures) from RNAcentral 
+% (The RNAcentral Consortium, 2017) 
+(\url{https://rnacentral.org/}),
+with sequence lengths ranging from 3,048~{\it nt} to 244,296~{\it nt}.
+For the sampling, we evenly split the range from $3,000$ to $244,296$ (the longest) into 24 bins by log-scale, and for each bin we
+randomly select a sequence (there are bins with
+no sequences).
+% (Homo Sapiens Transcript NONHSAT168677.1, from the NONCODE database (Zhao et al., 2016)).
+% We run all experiments 
+% % (compiled by GCC 4.9.0) 
+% on a Linux machine, 
+% with 2.90GHz Intel Core i9-7920X CPU and 64G memory.
+
+To show the approximation quality on random RNA sequences, 
+we generated 30 sequences with uniform distribution over \{A, C, G, U\}.
+% The lengths of these sequences are 100, 200, ..., 3000.
+The lengths of these sequences are spaced in 100 nucleotide intervals from 100 to 3,000.
+% with lengths range from 100~{\it nt} to 3,000~{\it nt}. 
+
+
+\subsection*{Baseline Software}
+% We present two versions of \linearpartition, \linearpartitionv and \linearpartitionc.
+% \linearpartitionv uses the experiment-based thermodynamic parameters~\cite{mathews+:1999,Mathews+:2004,xia+:1998}
+% as implemented in 
+We use two baseline software packages: 
+(1) \viennarnafold %~\cite{lorenz+:2011}
+(Version 2.4.11) 
+from 
+\url{https://www.tbi.univie.ac.at/RNA/download/sourcecode/2_ 4_x/ViennaRNA-2.4.11.tar.gz} 
+and 
+(2) \contrafold %~\cite{do+:2006}
+(Version 2.0.2) 
+from
+\url{http://contra.stanford.edu/}.
+\viennarnafold is a widely-used RNA structure prediction package,
+while \contrafold is a successful machine learning-based RNA structure prediction system.
+Both provide partition function and base pairing probability calculations based on 
+the classical cubic runtime algorithm.
+Our comparisons mainly focus on the systems with the same model, 
+i.e., \linearpartitionv vs. \viennarnafold and \linearpartitionc vs. \contrafold.
+In this way the differences are based on algorithms themselves rather than models.
+% bugs in contrafold
+We found a bug in \contrafold by comparing our results to CONTRAfold, 
+which led to overcounting multiloops in the partition function calculation.
+We corrected the bug, and all experiments are based on this bug-fixed version of \contrafold.
+
+
+\subsection*{Evaluation Metrics and Significance Test}
+
+Due to the uncertainty of base-pair matches existing in comparative analysis
+and the fact that there is fluctuation in base pairing at equilibrium,
+we consider a base pair to be correctly predicted if it is also displaced by one
+nucleotide on a strand~\cite{mathews+:1999}.
+Generally, if a pair $(i,j)$ is in the predicted structure, we consider it a
+correct prediction if one of $(i,j)$, $(i-1,j)$, $(i+1,j)$, $(i,j-1)$, $(i,j+1)$ is in the
+ground truth structure.
+% We also report the accuracy using exact base pair matching instead of this
+% method, in Figure~\ref{tab:accuracy_nos}. 
+%To evaluate the accuracy, 
+% Both sensitivity and PPV are reported.
+%Positive Predictive Value
+%(PPV), 
+
+We use Positive Predictive Value (PPV)
+and sensitivity 
+as accuracy measurements. 
+Formally, denote $\vecy$ as the predicted structure and $\vecy^{*}$ as the ground
+truth, we have:
+% $\ppv = \frac{\text{true positives}}{\text{true positives} +
+%   \text{false positives}} = \frac{|\vecy \cap \vecy^*|}{|\vecy|} $
+% $ \sens = \frac{\text{true positives}}{\text{true positives} +
+%   \text{false negatives}} =
+% \frac{|\vecy \cap \vecy^*|}{|\vecy^*|}$
+
+$$\ppv = \frac{\#_{\text {TP}}}{\#_{\text {TP}} + \#_{\text {FP}}}  = 
+\frac{|\pairs(\vecy) \cap \pairs(\vecy^*)|}{|\pairs(\vecy)|} $$
+
+$$ \sens = \frac{\#_{\text {TP}}}{\#_{\text {TP}} + \#_{\text {FN}}}  =
+\frac{|\pairs(\vecy) \cap \pairs(\vecy^*)|}{|\pairs(\vecy^*)|}$$
+where $\#_{\text {TP}}$ is the number of true positives (correctly predicted pairs),
+$\#_{\text {FP}}$ is the number of false positives (wrong predicted pairs)
+and $\#_{\text {FN}}$ is the number of false negatives (missing ground truth pairs).
+
+We test statistical significance using a paired, two-sided permutation test~\cite{Aghaeepour+Hoos:2013}.
+We follow the common practice, choosing $10,000$ as the repetition number
+and $\alpha=0.05$ as the significance threshold.
+% following previous work~\cite{Aghaeepour+Hoos:2013}.
+
+\subsection*{Curve Fitting}
+We determine the best exponent $a$ for the scaling curve $O(n^a)$ for each data series in Figures~\ref{fig:linearpairs} and \ref{fig:runtime}.
+Specifically, we use $f(x) = a x + b$ to fit the log-log plot of those series in Gnuplot;
+e.g., fitting $\log t_n = a \log n + b$, where $t_n$ is the running time on a sequence of length $n$,
+so that $t_n = e^b n^a$.
+Gnuplot uses the nonlinear least-squares Marquardt-Levenberg algorithm.
+
+
+\section*{Code availability}\label{code}
+
+Our \linearpartition source code can be downloaded  from\\ 
+{\tt\url{https://github.com/LinearFold/LinearPartition}}.
+
+\section*{Data availability}
+
+%\small
+
+The data that support the findings of this study are available from the corresponding author upon request.
+
+%% The data sets used in this study are  available online:
+%% ArchiveII~data~set: {\small\url{http://rna.urmc.rochester.edu/pub/archiveII.tar.gz}};
+%% RNAcentral data~set: \url{https://rnacentral.org}.
+%by requesting from the corresponding
+%author.

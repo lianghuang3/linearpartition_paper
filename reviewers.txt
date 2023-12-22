@@ -1,0 +1,17 @@
+Peter Clote, Boston College, clote@bc.edu
+John McCaskill, European Centre for Living Technology (Venice), johnsmccaskill@gmail.com
+Ann Condon, University of British Columbia, condon@cs.ubc.ca 
+Sean Eddy, Harvard, seaneddy@fas.harvard.edu
+Kengo Sato, Keio University, satoken@bio.keio.ac.jp
+Serafim Batzoglou, Illumina, sbatzoglou@illumina.com
+Niles A. Pierce, Caltech, niles@caltech.edu
+Jan Gorodkin, University of Copenhagen, gorodkin@rth.dk
+Peter Stadler, University of Leipzig, peter.stadler@bioinf.uni-leipzig.de
+Charles Lawrence, Brown, Charles_Lawrence@Brown.edu
+
+removed:
+Elena Rivas
+Rhiju Das
+Michael Zuker
+Rolf Backofen, 
+

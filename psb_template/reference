@@ -1,0 +1,57 @@
+ Previously it has been shown that base pairs in the
+MFE structure with few competing probable pairs (as measured by Shannon entropy) are more likely to be correctly
+predicted for small and large subunit rRNA (Huynen et al.
+1997). 
+
+
+Ding and Lawrence extended the partition function
+calculation to compute a statistically valid sample of secondary structures in the Boltzmann ensemble and calculate
+sampling statistics of structural features (Ding and
+Lawrence 2001, 2003).
+
+
+utilizes a recent set of nearest
+neighbor parameters for determining the free energy at
+37°C for an RNA secondary structure (Mathews et al. 2004),
+
+
+4. can be used to argue inexact partition function calculation is still accurate and needed
+
+For example, on average, 91.0% of base pairs in
+the minimum free energy structure with a probability of
+0.99 or greater of pairing are in the known structure based
+on comparative sequence analysis. (Mathews, 2004)
+
+
+The predicted minimum free energy (MFE) structure
+provides a single best guess for the secondary structure, but 
+it assumes that the secondary structure is at equilibrium,
+that there is a single conformation for the RNA, and that
+the thermodynamic parameters for evaluating conformation free energies are without error. 
+
+
+5. DIRKS et al., 2003
+The first
+dynamic programming algorithms for secondary structure prediction were proposed by Waterman and Smith1,2 and Nussinov et al.3
+In 1981, Zuker and Stiegler4 introduced an improved dynamic
+programming algorithm that explores all possible unpseudoknotted
+secondary structures in O(N4
+) time, where N is the sequence
+length. Several reviews describe subsequent progress on methods
+for secondary structure prediction.5–7 In 1990, McCaskill8 described a different O(N4
+) dynamic programming algorithm for
+computing the partition function of a given sequence over all
+possible unpseudoknotted secondary structures. Both the Zuker
+and Stiegler structure prediction algorithm and the McCaskill
+partition function algorithm can be reduced to O(N3
+) complexity
+using a simplified energy model.4,8 The partition function can be
+used to derive thermodynamic properties of the equilibrium conformational ensemble including the base-pairing probability of any
+two bases.8,9 As a result, the partition function holds promise as a
+means of evaluating and improving sequence designs for molecules that are intended to adopt a specified secondary structure.10,11
+
+
+6. Lu and Mathews 2009
+Using MaxExpect, the
+average PPV of optimal structure is improved from 66% to 68% at the same sensitivity level (73%) compared with free energy
+minimization.

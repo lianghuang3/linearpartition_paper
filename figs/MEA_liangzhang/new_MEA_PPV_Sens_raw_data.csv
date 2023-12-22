@@ -1,0 +1,10 @@
+tRNA,vienna_off_the_shelf,63.69,73.11,linearvienna_off_the_shelf,63.93,73.31,RNAfoldMEA_gamma=1.5,61.56,70.96,LinearFold-V_b_square_MEA_gamma=1.5,61.56,70.96
+5S rRNA,vienna_off_the_shelf,59.79,66.22,linearvienna_off_the_shelf,59.81,66.27,RNAfoldMEA_gamma=1.5,62.31,68.56,LinearFold-V_b_square_MEA_gamma=1.5,62.31,68.56
+SRP,vienna_off_the_shelf,60.08,66.06,linearvienna_off_the_shelf,60.42,66.32,RNAfoldMEA_gamma=1.5,60.39,66.03,LinearFold-V_b_square_MEA_gamma=1.5,60.32,65.96
+RNaseP,vienna_off_the_shelf,47.43,55.3,linearvienna_off_the_shelf,47.53,55.22,RNAfoldMEA_gamma=1.5,50.64,57.45,LinearFold-V_b_square_MEA_gamma=1.5,50.58,57.14
+tmRNA,vienna_off_the_shelf,41.53,46.93,linearvienna_off_the_shelf,40.58,45.91,RNAfoldMEA_gamma=1.5,42.26,46.81,LinearFold-V_b_square_MEA_gamma=1.5,41.31,45.83
+Group I Intron,vienna_off_the_shelf,46.91,57.8,linearvienna_off_the_shelf,47.74,58.8,RNAfoldMEA_gamma=1.5,48.61,59.38,LinearFold-V_b_square_MEA_gamma=1.5,48.69,59.72
+telomerase RNA,vienna_off_the_shelf,41.67,58.48,linearvienna_off_the_shelf,41.7,58.41,RNAfoldMEA_gamma=1.5,41.71,58.15,LinearFold-V_b_square_MEA_gamma=1.5,41.89,58.45
+16S rRNA,vienna_off_the_shelf,37.37,44.29,linearvienna_off_the_shelf,38.91,45.92,RNAfoldMEA_gamma=1.5,40.47,46.74,LinearFold-V_b_square_MEA_gamma=1.5,41.52,48.23
+23S rRNA,vienna_off_the_shelf,54.94,62.49,linearvienna_off_the_shelf,55.27,62.65,RNAfoldMEA_gamma=1.5,57.06,64.14,LinearFold-V_b_square_MEA_gamma=1.5,57.96,64.76
+Overall,vienna_off_the_shelf,50.38,58.96,linearvienna_off_the_shelf,50.65,59.2,RNAfoldMEA_gamma=1.5,51.67,59.8,LinearFold-V_b_square_MEA_gamma=1.5,51.79,59.96

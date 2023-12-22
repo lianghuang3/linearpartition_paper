@@ -1,0 +1,716 @@
+\onecolumn
+\newpage
+%\begin{titlepage}
+  \begin{centering}
+    \vspace*{1cm}
+    
+    \textbf{\Huge Supporting Information}\\
+    \vspace{0.5cm}
+    \textbf{\Huge LinearFold: Linear-Time Prediction of RNA Secondary Structure}\\
+    \vspace{0.5cm}
+    \textbf{\large Dezhong Deng, Kai Zhao, David Hendrix, David H. Mathews, and
+      Liang Huang}
+    \vspace{1.5cm}
+    
+  \end{centering}
+%\end{titlepage}
+
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{SI\,\arabic{figure}} % spacing
+\setcounter{table}{0}
+\renewcommand{\thetable}{SI\,\arabic{table}}
+
+
+\begin{figure}[h]
+  \centering
+  \scalebox{1.2}{
+  \begin{tabular}{lll}
+    \toprule
+    Code & \myurl{https://github.com/abentu0101/LinearFold} & in C++; only requires GCC 4.9.0+\\
+    \midrule
+    Server  & \myurl{http://linearfold.eecs.oregonstate.edu} & world's fastest; sequence limit 250,000\\
+    \midrule
+    Demo  & \myurl{http://linearfold.eecs.oregonstate.edu/preset.html} & prediction results for various beam sizes\\
+    \bottomrule
+  \end{tabular}
+  }
+  \caption {LinearFold source code and web server availability. We have the world's fastest RNA secondary structure prediction server, and the longest sequence limit (by comparison,
+  Vienna RNAfold and RNAstructure have sequence limits of 10,000 and 4,000, respectively.
+  Our \linearfold server has been used by researchers from 27 countries.}
+  \label{fig:codeserver}
+\end{figure}
+
+%% \iffalse
+%\begin{table*}[h]
+%\centering
+%\begin{tabular}{r|rrr||rr|rr||rr|rr}
+%       & \multicolumn{2}{c}{\# of sequences} & avg. & \multicolumn{2}{c|}{\contrafoldmfe} & \multicolumn{2}{c||}{\linearfoldc $b$=100}
+%                                                                                                                              & \multicolumn{2}{c|}{\viennarnafold} & \multicolumn{2}{c}{\linearfoldv $b$=100}\\
+%Family & total & used & length & 
+%                                        PPV & sensitivity & $\Delta$PPV & $\Delta$sensitivity & 
+%                                                                                                PPV & sensitivity & $\Delta$PPV & $\Delta$sensitivity \\
+%\hline
+%tRNA & 557 & 74 & 77.3 & 69.32 & 70.84 & +0.00 & +0.00 & 63.80 & 73.25 & -0.13 & +0.00 \\
+%5S rRNA & 1,283 & 1,125 & 118.8 & 76.48 & 76.62 & +0.13 & +0.01 & 60.12 & 66.62 & +0.01 & +0.04 \\
+%SRP  & 928 & 886 & 186.1 & 64.24 & 63.88 & -0.03 & -0.03 & 60.93 & 66.66 & (*)+0.38 & (*)+0.29 \\
+%RNaseP & 454 & 182 & 344.1 & 49.34 & 48.10 & -0.15 & -0.17 & 47.78 & 55.79 & +0.03 & -0.19 \\
+%tmRNA  & 462 & 462 & 366.0 & 46.50 & 39.70 & (*)-0.62 & (*)-0.76 & 42.09 & 47.58 & (*)-0.96 & (*)-1.00 \\
+%Group I Intron & 98 & 96 & 424.9 & 52.50 & 50.78 & (**)+1.30 & (*)+0.94 & 47.02 & 57.96 & (*)+0.80 & (*)+0.94 \\
+%telomerase RNA & 37 & 37 & 444.6 & 46.12 & 59.96 & -0.07 & -0.05 & 41.87 & 58.77 & -0.01 & -0.14 \\
+%%Group II Intron & 11 & 11 & 716.5 & 27.84 & 30.41 & -0.24 & +1.27 & 24.47 & 41.12 & +0.95 & +2.23 \\
+%16S rRNA & 22 & 22 & 1,547.9 & 40.46 & 41.48 & (*)+3.89 & (*)+3.08 & 37.63 & 44.60 & (*)+1.46 & (*)+1.56 \\
+%23S rRNA & 5 & 5 & 2,927.4 & 48.29 & 49.85 & (**)+14.00 & (**)+9.98 & 55.09 & 62.67 & +0.40 & +0.25 \\
+%\hline
+%{\em Overall} & 3,846 & 2,889 & 222.2 & 54.80 & 55.69 & +2.06 & +1.44 & 50.70 & 59.32 & +0.22 & +0.20 \\
+%\end{tabular}
+%\smallskip
+%\caption{Detailed prediction accuracies in percent, allowing one nucleotide in a pair to be displaced by one position, on the ArchiveII dataset using \contrafoldmfe, \linearfoldc, 
+%                  \viennarnafold and \linearfoldv.
+%                              This slipping method~\cite{sloma+mathews:2016}  considers a base pair to
+%                  be correct if it is slipped by one nucleotide on a strand. 
+%         Statistical significance are marked by 
+%         *($0.01\leq p<0.05$) and **($p<0.01$).
+%         Overall, \linearfoldc outperforms \contrafoldmfe by +2.06 PPV and +1.44 sensitivity,
+%                  and \linearfoldv outperforms \viennarnafold by +0.22 PPV and +0.20 sensitivity.
+%         Among the nine families, \linearfoldc is significantly better on three (Group I Intron, 16S and 23S rRNAs),
+%               and \linearfoldv is significantly better on three as well (SRP, Group I Intron, and 16S rRNAs).
+%         We also report the accuracies using exact base pair match in the next Table.
+%         \label{tab:accuracy}}
+%\end{table*}
+
+% \iffalse
+\begin{table*}[h] % hzhang: redo with new data
+  \centering
+  \begin{tabular}{r|rrr||rr|rr||rr|rr}
+  % \begin{tabular}{r|r||r||r}
+    & \multicolumn{3}{c||}{Family Statistic} & \multicolumn{4}{c||}{slipping method~\cite{sloma+mathews:2016}} & \multicolumn{4}{c}{exact matching method} \\
+
+    & \multicolumn{2}{c}{\# of sequences} & avg. & \multicolumn{2}{c|}{\contrafoldmfe} & \multicolumn{2}{c||}{\linearfoldc $b$=100}
+    & \multicolumn{2}{c|}{\contrafoldmfe} & \multicolumn{2}{c}{\linearfoldc $b$=100}\\
+    Family & total & used & length & 
+    PPV & sensitivity & $\Delta$PPV & $\Delta$sensitivity & 
+    PPV & sensitivity & $\Delta$PPV & $\Delta$sensitivity \\
+    \hline
+    tRNA & 557 & 74 & 77.3 & 68.89  & 70.54 & +0.00  & +0.00  & 67.61 & 69.12 & +0.00  & +0.00  \\
+    5S rRNA & 1,283 & 1,125 & 118.8 & 73.66 & 73.74 & +0.00  & +0.00  & 70.68 & 70.70 & +0.00  & +0.00  \\
+    SRP  & 928 & 886 & 186.1 & 62.73  & 62.41 & -0.07 & -0.07 & 59.14 & 58.61 & -0.05 & -0.07 \\
+    RNaseP & 454 & 182 & 344.1 & 48.91  & 47.90 & -0.22 & (*)-0.54 & 47.45 & 46.39 & -0.25 & (*)-0.55 \\
+    tmRNA  & 462 & 462 & 366.0 &  44.88 & 38.61 & (*)-0.74 & (**)-0.93 & 42.96 & 36.94 & (*)-0.81 & (**)-0.99 \\
+    Group I Intron & 98 & 96 & 424.9 &  52.62 & 50.93 & +0.84  & (*)+0.80  & 51.21 & 49.56 & +0.80  & (*)+0.75  \\
+    telomerase RNA & 37 & 37 & 444.6 &  45.39 & 59.19 & -0.05 & -0.11 & 43.40 & 56.58 & +0.03  & +0.00  \\
+    16S rRNA & 22 & 22 & 1,547.9 & 41.08  & 41.77 & (*)+3.56  & (*)+3.09  & 39.84 & 40.49 & (*)+3.47  & (*)+2.99  \\
+    23S rRNA & 5 & 5 & 2,927.4 &  52.47 & 53.18 & (*)+8.65  & (*)+5.66  & 50.56 & 51.24 & (*)+8.51  & (*)+5.60  \\
+    \hline
+    {\em Overall} & 3,846 & 2,889 & 222.2  & 54.51  & 55.36 & +1.33  & +0.88  & 52.54 & 53.29 & +1.30  & +0.86  \\
+  \end{tabular}
+  \smallskip
+  \caption{Detailed prediction accuracies in percent, allowing one nucleotide in a pair to be displaced by one position, on the ArchiveII dataset using \contrafoldmfe, \linearfoldc, 
+    \viennarnafold and \linearfoldv.
+    This slipping method~\cite{sloma+mathews:2016}  considers a base pair to
+    be correct if it is slipped by one nucleotide on a strand. 
+    Statistical significance are marked by 
+    *($0.01\leq p<0.05$) and **($p<0.01$).
+    Overall, \linearfoldc outperforms \contrafoldmfe by +1.82 PPV and +1.23 sensitivity, % hzhang: redo with new data
+    and \linearfoldv outperforms \viennarnafold by +0.28 PPV and +0.24 sensitivity.
+    Among the nine families, \linearfoldc is significantly better on five (SRP, Group I Intron, 5S, 16S and 23S rRNAs), % hzhang: grp1 and 16s are significant only on PPV
+    and \linearfoldv is significantly better on three (SRP, Group I Intron, and 16S rRNAs). % hzhang: srp is significant only on PPV
+    We also report the accuracies using exact base pair match in the next Table.
+    \label{tab:accuracy}}
+\end{table*}
+
+%\begin{table*}[h]
+%  \centering
+%  \begin{tabular}{r|rrr||rr|rr||rr|rr}
+%    & \multicolumn{2}{c}{\# of sequences} & avg. & \multicolumn{2}{c|}{\contrafoldmfe} & \multicolumn{2}{c||}{\linearfoldc $b$=100} & \multicolumn{2}{c|}{\viennarnafold} & \multicolumn{2}{c}{\linearfoldv $b$=100}\\
+%    Family & total & used & length & PPV & sensitivity & $\Delta$PPV & $\Delta$sensitivity & PPV & sensitivity & $\Delta$PPV & $\Delta$sensitivity \\
+%    \hline
+%    tRNA & 557 & 74 & 77.3 & 67.73 & 69.12 & +0.00 & +0.00 & 61.75 & 70.98 & +0.04 & -0.07 \\
+%    5S rRNA & 1,283 & 1,125 & 118.8 & 72.60 & 72.59 & -0.01 & +0.00 & 57.28 & 63.35 & +0.00 & +0.05 \\
+%    SRP  & 928 & 886 & 186.1 & 59.67 & 59.02 & -0.04 & -0.03 & 56.58 & 61.55 & -0.07 & -0.15 \\
+%    RNaseP & 454 & 182 & 344.1 & 47.49 & 46.15 & -0.18 & -0.19 & 45.76 & 53.28 & +0.07 & -0.05 \\
+%    tmRNA  & 462 & 462 & 366.0 & 43.83 & 37.38 & (*)-0.68 & (*)-0.70 & 39.75 & 44.90 & (*)-1.08 & (*)-1.15 \\
+%    Group I Intron & 98 & 96 & 424.9 & 51.03 & 49.35 & (**)+1.15 & (*)+0.89 & 45.49 & 56.06 & (*)+0.81 & (*)+0.97 \\
+%    telomerase RNA & 37 & 37 & 444.6 & 43.66 & 56.72 & +0.04 & +0.09 & 39.53 & 55.40 & -0.05 & -0.23 \\
+%    16S rRNA & 22 & 22 & 1,547.9 & 39.01 & 39.97 & (*)+3.73 & (*)+2.95 & 35.65 & 42.26 & (*)+1.24 & (*)+1.29 \\
+%    23S rRNA & 5 & 5 & 2,927.4 & 46.46 & 47.97 & (**)+13.42 & (**)+9.52 & 53.20 & 60.50 & +0.13 & -0.05 \\
+%    \hline
+%    {\em Overall} & 3,846 & 2,889 & 222.2 & 52.39 & 53.14 & +1.95 & +1.38 & 48.33 & 56.48 & +0.12 & +0.06 \\
+%\end{tabular}
+%\smallskip
+%\caption{The prediction accuracies using exact base-pair matching. Statistical significance are marked by 
+%         *($0.01\leq p<0.05$) and **($p<0.01$).
+%                  Overall, \linearfoldc outperforms \contrafoldmfe by +1.95 PPV and +1.38 sensitivity,
+%                  and \linearfoldv outperforms \viennarnafold by +0.12 PPV and +0.06 sensitivity.
+%         Among the nine families, \linearfoldc is significantly better on three (Group I Intron, 16S and 23S rRNAs),
+%               and \linearfoldv is significantly better on two (Group I Intron and 16S rRNAs).
+%\label{tab:accuracy_nos}}
+%\end{table*}
+
+
+\begin{table*}[h]  % hzhang: redo with new data
+  \centering
+  \begin{tabular}{r|rrr||rr|rr||rr|rr}
+    & \multicolumn{3}{c||}{Family Statistic} & \multicolumn{4}{c||}{slipping method} & \multicolumn{4}{c}{exact matching method} \\
+
+    & \multicolumn{2}{c}{\# of sequences} & avg. & \multicolumn{2}{c|}{\contrafoldmfe} & \multicolumn{2}{c||}{\linearfoldc $b$=100} & \multicolumn{2}{c|}{\contrafoldmfe} & \multicolumn{2}{c}{\linearfoldc $b$=100}\\
+
+    & & & & \multicolumn{2}{c|}{no sharpturn} & \multicolumn{2}{c||}{no sharpturn} & \multicolumn{2}{c|}{no sharpturn} & \multicolumn{2}{c}{no sharpturn}\\
+
+    Family & total & used & length & PPV & sensitivity & $\Delta$PPV & $\Delta$sensitivity & PPV & sensitivity & $\Delta$PPV & $\Delta$sensitivity \\
+    \hline
+    tRNA & 557 & 74 & 77.3 &  69.05 & 70.54 & 0.00  & 0.00  & 67.73 & 69.12 & 0.00  & 0.00  \\
+    5S rRNA & 1,283 & 1,125 & 118.8 &  75.52  & 75.61 & 0.00  & 0.00  & 72.60 & 72.59 & 0.00  & 0.00  \\
+    SRP  & 928 & 886 & 186.1 & 63.27  & 62.84 & -0.04 & -0.04 & 59.67 & 59.02 & -0.04 & -0.03 \\  
+    RNaseP & 454 & 182 & 344.1 &  48.96 & 47.67 & -0.11 & -0.14 & 47.49 & 46.15 & -0.13 & -0.15 \\  
+    tmRNA  & 462 & 462 & 366.0 &  45.74 & 39.05 & -0.67 & -0.82 & 43.83 & 37.38 & -0.72 & -0.85 \\  
+    Group I Intron & 98 & 96 & 424.9 & 52.36  & 50.64 & 0.87  & 0.80  & 51.03 & 49.35 & 0.82  & 0.74  \\  
+    telomerase RNA & 37 & 37 & 444.6 & 45.62  & 59.30 & -0.05 & -0.11 & 43.66 & 56.72 & 0.04  & 0.00  \\  
+    16S rRNA & 22 & 22 & 1,547.9 &  40.20 & 41.21 & 3.76  & 3.26  & 39.01 & 39.97 & 3.62  & 3.13  \\  
+    23S rRNA & 5 & 5 & 2,927.4 & 48.05  & 49.61 & 14.03 & 9.86  & 46.46 & 47.97 & 13.54 & 9.47  \\  
+    \hline
+    {\em Overall} & 3,846 & 2,889 & 222.2 & 54.31 & 55.16 & +1.98  & +1.42  & 52.39 & 53.14 & +1.90  & +1.37  \\  
+  \end{tabular}
+  \smallskip
+  \caption{The prediction accuracies using exact base-pair matching. Statistical significance are marked by 
+    *($0.01\leq p<0.05$) and **($p<0.01$).
+    Overall, \linearfoldc outperforms \contrafoldmfe by +1.80 PPV and +1.23 sensitivity, % hzhang: redo with new data
+    and \linearfoldv outperforms \viennarnafold by +0.11 PPV and +0.06 sensitivity. % hzhang: redo with new data
+    Among the nine families, \linearfoldc is significantly better on five (SRP, Group I Intron, 5S, 16S and 23S rRNAs), % hzhang: grp1, 16s and 23s are significant only on PPV
+    and \linearfoldv is significantly better on two (Group I Intron and 16S rRNAs).  % hzhang: 16s is significant only on PPV
+    \label{tab:accuracy_nos}}
+\end{table*}
+
+\newpage
+
+\begin{table*}[h]  % hzhang: redo with new data
+  \centering
+  \begin{tabular}{r|rrr||rr|rr||rr|rr}
+    & \multicolumn{3}{c||}{Family Statistic} & \multicolumn{4}{c||}{slipping method} & \multicolumn{4}{c}{exact matching method} \\
+
+    & \multicolumn{2}{c}{\# of sequences} & avg. & \multicolumn{2}{c|}{\viennarnafold} & \multicolumn{2}{c||}{\linearfoldv $b$=100} & \multicolumn{2}{c|}{\viennarnafold} & \multicolumn{2}{c}{\linearfoldv $b$=100}\\
+    Family & total & used & length & PPV & sensitivity & $\Delta$PPV & $\Delta$sensitivity & PPV & sensitivity & $\Delta$PPV & $\Delta$sensitivity \\
+    \hline
+    tRNA & 557 & 74 & 77.3 &  63.51 & 72.92 & +0.24  & +0.19  & 61.75 & 70.98 & +0.04  & -0.07 \\
+    5S rRNA & 1,283 & 1,125 & 118.8 &  59.55  & 65.96 & +0.03  & +0.04  & 57.28 & 63.35 & -0.14 & -0.11 \\
+    SRP  & 928 & 886 & 186.1 & 59.91  & 65.42 & (*)+0.35  & +0.27  & 56.58 & 61.55 & -0.09 & -0.20 \\
+    RNaseP & 454 & 182 & 344.1 &  47.28 & 55.15 & +0.12  & -0.07 & 45.76 & 53.28 & +0.15  & +0.04  \\
+    tmRNA  & 462 & 462 & 366.0 &  41.47 & 46.86 & (**)-0.95 & (**)-1.02 & 39.75 & 44.90 & (**)-1.09 & (**)-1.17 \\
+    Group I Intron & 98 & 96 & 424.9 &  46.81 & 57.68 & (**)+0.86  & (*)+1.02  & 45.49 & 56.06 & (**)+0.81  & (*)+0.97  \\
+    telomerase RNA & 37 & 37 & 444.6 & 41.47  & 58.20 & +0.05  & -0.05 & 39.53 & 55.40 & -0.05 & -0.19 \\
+    16S rRNA & 22 & 22 & 1,547.9 &  37.23 & 44.13 & (*)+1.51  & +1.59  & 35.65 & 42.26 & (*)+1.33  & +1.39  \\
+    23S rRNA & 5 & 5 & 2,927.4 & 54.79  & 62.32 & +0.33  & +0.16  & 53.20 & 60.50 & +0.07  & -0.12 \\
+    \hline
+    {\em Overall} & 3,846 & 2,889 & 222.2 & 50.22 & 58.74 & +0.28  & +0.24  & 48.33 & 56.48 & +0.11  & +0.06  \\
+  \end{tabular}
+  \smallskip
+  \caption{The prediction accuracies using exact base-pair matching. Statistical significance are marked by 
+    *($0.01\leq p<0.05$) and **($p<0.01$).
+    Overall, \linearfoldc outperforms \contrafoldmfe by +1.80 PPV and +1.23 sensitivity, % hzhang: redo with new data
+    and \linearfoldv outperforms \viennarnafold by +0.11 PPV and +0.06 sensitivity. % hzhang: redo with new data
+    Among the nine families, \linearfoldc is significantly better on five (SRP, Group I Intron, 5S, 16S and 23S rRNAs), % hzhang: grp1, 16s and 23s are significant only on PPV
+    and \linearfoldv is significantly better on two (Group I Intron and 16S rRNAs).  % hzhang: 16s is significant only on PPV
+    \label{tab:accuracy_nos}}
+\end{table*}
+    
+\newpage
+
+\begin{figure}% [h]
+  \centering
+%\hspace{-0.5cm}
+\begin{tabular}{ll}
+{\large\sf A} & {\large\sf B}\\[-0.5cm]
+    \includegraphics[width=.45\textwidth]{figs/beam_PPV_Sens_vienna_Mathews_hzhang.pdf}
+    &
+    \hspace{-1cm}
+    \includegraphics[width=.45\textwidth]{figs/precision-recall-Mathews-vienna-hzhang.pdf}
+  \end{tabular}
+  \caption{This Figure corresponds to Figure~\ref{fig:beamsize}C--D but
+  using the \viennarnafold instead of \contrafoldmfe model, on the same ArchiveII dataset. 
+    A: PPV and sensitivity against beam size;
+    B: sensitivity against PPV, with varying beam size.
+    Similar to what we observe in Figure~\ref{fig:beamsize},
+    PPV and sensitivity both improve with beam size, up to 120 or so,
+    and then slowly degrade, eventually converging to the exact search baseline of \viennarnafold.
+    The best beam size appears to be around 120, but we choose the round number of 100 by default.
+    We do not fine-tune the beam size on any dataset.
+  \label{fig:viennapr}}
+%\vspace{1cm}
+\end{figure}
+
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth]{figs/beamsize_runtime_23s_hzhang.pdf}
+\caption{Impact of beam size on prediction speed (results on 23S rRNAs only); note the x-axis is beam size, not sequence length.
+The running times of \linearfold without cube pruning scale superlinearly  with beam size $b$, which agrees with the theoretical analysis of $O(nb^2)$ time,
+and linearly with beam size after applying cube pruning, which also agrees with the theoretical analysis of $O(nb\log b)$ time.
+All other results in this paper use cube pruning.
+\label{fig:beamsize_speed}
+}
+\end{figure}
+
+%% \iffalse
+%% \begin{figure} %[h]
+%%   \centering
+%%   \begin{tabular}{cc}
+%%       \includegraphics[width=.4\textwidth]{figs/runtime_ppv.pdf}
+%%     &\hspace{-1cm}
+%%       \includegraphics[width=.4\textwidth]{figs/runtime_sens.pdf}
+%%       \\[-0.2cm]
+%%   \end{tabular}
+%%   \caption{The PPV/sensitivity against running time, comparing our \linearfold
+%%     with two baseline systems, running on the ArchiveII dataset. 
+%%     \label{fig:runningtime} }
+%% \end{figure}
+%% \fi
+
+\begin{figure} %[h]
+  \centering
+  \begin{tabular}{cc}
+      \includegraphics[width=.35\textwidth]{figs/bylen_bar_v_precision_hzhang.pdf} %hzhang: replot with new data
+    &\hspace{-1.2cm}
+      \includegraphics[width=.35\textwidth]{figs/bylen_bar_v_recall_hzhang.pdf} %hzhang: replot with new data
+      \\[-0.2cm]
+  \end{tabular}
+  \caption{This Figure corresponds to Figure~\ref{fig:accuracy}C, with \viennarna instead of \contrafoldmfe model, on the same ArchiveII dataset.
+    We also include the local folding results of \viennarnafold with maximum base pair span of 150 (using {\tt --maxBPspan 150} in \rnafold).
+%    It shows PPV and sensitivity of \linearfoldv by pair length
+%    in the Mathews
+%    dataset, comparing to \viennarnafold.
+    Each bar represents the overall PPV/sensitivity of all base pairs in a particular length range (by groundtruth pairs).
+    We observe that \linearfoldv outperforms \viennarnafold in long-range base pairs (500+ \nts apart),
+       while the local folding method only predicts local pairs ($\leq$150 \nts apart).
+    \label{fig:viennabylen} }
+\end{figure}
+
+\begin{figure} %[h]
+  \centering
+  \begin{tabular}{ll}
+  {\large\sf A} & \hspace{-0.4cm}{\large\sf B}
+             \\[-0.5cm]
+      \ \ \includegraphics[width=.5\textwidth]{figs/bylen_bracnt_hzhang.pdf}
+    &\hspace{-.2cm}
+      \includegraphics[width=.5\textwidth]{figs/bylen_bracnt_v_hzhang.pdf}
+      \\[-0.2cm]
+  \end{tabular}
+  \caption{Length distributions of the predicted base pairs using different methods, on the
+    16S/23S rRNAs in the ArchiveII dataset.
+    Here we plot the number of both predicted and ground truth base pairs (including pseudoknots)
+    in each of the following ranges:
+    $(0,50], (50,100]$, ... $(400,500]$.
+    This figure shows that \linearfoldc  %(with both beam sizes 100 and 50)
+    produces almost the same length distributions with the ground truth,
+    while \contrafold severely overpredicts base pairs longer than 500\nts apart.
+    Both \viennarna and \linearfoldv overpredict in that range, but \linearfoldv is less severe.
+    %% has almost the same 
+    %% is very consistent with the
+    %% distribution of the base pair predicted by length, even with a very small
+    %% number of beamsize.
+    In B, we also reconfirm the limitation of local folding which does not output any long-range pairs.
+    %% algorithm can
+    %% predict no base pair beyond their maximum range, which is a crucial drawback
+    %% in prediction of long RNA sequences. 
+    \label{fig:bylencnt}}
+\end{figure}
+
+
+\definecolor{LightCyan}{rgb}{0.88,1,1}
+\begin{figure*} [t]
+  \newcolumntype{g}{>{\columncolor{LightCyan}}c}
+  \centering
+  \hspace{-0.3cm}
+  \begin{tabular}{|c|c|g|}
+\hline%\hhline{~|-|-|-|}%\cline{2-4}
+ \multicolumn{3}{|c|}{23S rRNA \ecoli (2904 \nts, 830 pairs)}\\
+% \hline%\hhline{~|-|-|-|}%\cline{2-4}
+%    \contrafoldmfe   %Group I Intron \cmirabilis (526\nts, 143 \pairs)
+%     &
+%       \contrafoldmfe Local ($L$=150)  % 16S rRNA \apyrophilus (1564\nts, 468 \pairs)
+%     &
+%       \linearfoldc $b$ = 100 % 23S rRNA \ecoli (2904\nts, 830 \pairs)
+%     \\
+
+% \hline%\hhline{~|-|-|-|}%\cline{2-4}
+
+%     \includegraphics[width=.3\textwidth]{figs/23s_4_contrafold.pdf}
+%     & 
+%       \includegraphics[width=.3\textwidth]{figs/23s_4_contrafold150.pdf}
+%     &
+%       \includegraphics[width=.3\textwidth]{figs/23s_4_beam100.pdf}
+%     \\
+    
+%       {\scriptsize \ppv: 47.15, \sens: 48.92, \pairs: 861}%, time: 5.20$s$. }
+%     &
+%       {\scriptsize \ppv: 63.70, \sens: 54.34, \pairs: 708}%, time: 5.20$s^*$. }
+%     &
+%       {\scriptsize \ppv: 69.94, \sens: 67.83, \pairs: 805}%, time: 1.78$s$. }
+%     \\
+
+\hline%\hhline{~|-|-|-|}%\cline{2-4}
+    \viennarnafold   %Group I Intron \cmirabilis (526\nts, 143 \pairs)
+    &
+      \viennarnafold Local ($L$=150)  % 16S rRNA \apyrophilus (1564\nts, 468 \pairs)
+    &
+      \linearfoldv $b$ = 100 % 23S rRNA \ecoli (2904\nts, 830 \pairs)
+    \\
+
+\hline%\hhline{~|-|-|-|}%\cline{2-4}
+    
+      \includegraphics[width=.32\textwidth]{figs/23s_4_vienna_hzhang.pdf}
+    & 
+      \includegraphics[width=.32\textwidth]{figs/23s_4_vienna150_hzhang.pdf}
+    &
+      \includegraphics[width=.32\textwidth]{figs/23s_4_linearvienna_hzhang.pdf}
+    \\
+
+      {\scriptsize \ppv: 52.02, \sens: 57.47, \pairs: 917, time: 7.6$s$. }
+    &
+      {\scriptsize \ppv: 51.63, \sens: 55.18, \pairs: 887, time: 6.3$s$. }
+    &
+       {\scriptsize \ppv: 55.60, \sens: 62.17, \pairs: 928, time: 2.2$s$. }
+    \\
+    \hline
+    
+% &    Group I Intron \cmirabilis (526\nts, 143 \pairs)
+%     &
+%       16S rRNA \apyrophilus (1564\nts, 468 \pairs)
+%     &
+%       23S rRNA \ecoli (2904\nts, 830 \pairs)
+%     \\
+%     \hline
+% \rot{\hspace{1.5cm}\viennarnafold}    
+%  &   \includegraphics[width=.3\textwidth]{figs/new_4_vienna.pdf}
+%     &
+%     \includegraphics[width=.3\textwidth]{figs/16s_8_vienna.pdf}
+%     &
+%     \includegraphics[width=.3\textwidth]{figs/23s_4_vienna.pdf}
+%     % \end{subfigure}
+
+%     \\
+
+%  &   \ppv: 45.61, \sens: 54.55, \pairs: 171.
+%     &
+%     \ppv: 56.12, \sens: 63.68, \pairs: 531.
+%     &
+%     \ppv: 52.34, \sens: 57.83, \pairs: 917.
+%     \\[0.3cm]
+% \hdashline
+
+% %    \hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+% \rot{\hspace{1.5cm}\linearfoldv $b$=100}    
+%  &   \includegraphics[width=.3\textwidth]{figs/new_4_linearvienna.pdf}
+%     &
+%     \includegraphics[width=.3\textwidth]{figs/16s_8_linearvienna.pdf}
+%     &
+%     \includegraphics[width=.3\textwidth]{figs/23s_4_linearvienna.pdf}
+%     \\
+
+%   &  \ppv: 56.63, \sens: 65.73, \pairs: 166.
+%     &
+%     \ppv: 55.81, \sens: 62.61, \pairs: 525.
+%     &
+%     \ppv: 56.14, \sens: 62.77, \pairs: 928.
+%     \\
+
+  \end{tabular}
+  \caption{Circular plots of prediction results on the \ecoli 23S rRNA  (corresponding to
+    Figure~\ref{fig:circular}) comparing \viennarnafold, its local folding mode, and \linearfoldv.
+    We observe that local folding only predicts local pairs ($\leq$150 \nts apart in this example).
+    Moreover, with a time complexity of $O(nL^2)$, it runs almost as slow as the $O(n^3)$ baseline, and much slower than our \linearfold (with complexity $O(nb\log b)$).
+    %, and local folding method using the same model.
+    \label{fig:si-circle}}
+\end{figure*}
+
+
+\begin{figure} %[h]
+  \centering
+  \begin{tabular}{ll}
+  {\large\sf A} & {\large\sf B}\\[-0.5cm]
+    \includegraphics[width=.5\textwidth]{figs/modelscore_fscore_Mathews_hzhang.pdf}
+    &\hspace{-.2cm}
+      \includegraphics[width=.5\textwidth]{figs/modelscore_fscore_Mathews_16s23s_hzhang.pdf}
+      \\[-0.2cm]
+  \end{tabular}
+  \caption{Comparing left-to-right and right-to-left prediction,
+    using the whole Archive II dataset (A) and only 16S/23S families (B).
+    In general, they perform very similarly.
+    %% We run a set of experiment to see if our algorithm reflects the
+    %% effects of cotrancriptional folding, by comparing predictions from
+    %% left-to-right and right-to-left. Experimental results show that 
+    %% left-to-right and right-to-left prediction perform similarly in terms of PPV
+    %% and sensitivity (left). Specifically, in 16S/23S families, right-to-left prediction
+    %% is actually performing slightly better (right). 
+    \label{fig:right to left} }
+\end{figure}
+
+\begin{figure}[h]
+  \vspace{-0.1cm}
+  \hspace{-.5cm}
+  \centering
+  \scalebox{1.2}{
+    \begin{tabular}{c}
+      \begin{tabular}{ll}
+        
+  \begin{tabular}{ll}
+   input      & $x_1 \ldots x_{n}$ \\[0.1in]
+%\hline\\
+    state        & \nnitem{\bm y}{\sigma}{j}{s}  \\ [0.1in]
+
+    axiom        & \nnitem{\bm {\text `}~{\text '}}{{\text `}~{\text '}}{1}{0} \\ [0.1in]
+
+    goal         & \nnitem{\bm y}{{\text `}~{\text '}}{n+1}{\_}  \\ [0.1in]
+
+    {\push}       & \inferrule{\nnitem{\bm y}{\sigma}{j}{s}}
+                              {\nnitem{\bm y\!\circ\!{\text `}\leftb{\text '}}{\sigma \newmid j}{j\!+\!1}{0} }   \\[0.2in]
+
+    {\nskip}       & \inferrule{\nnitem{\bm y}{\sigma}{j}{s}}
+                               {\nnitem{\bm y\!\circ\!{\text `}\mydot{\text '}}{\sigma}{j\!+\!1}{s+\delta} }   \\[0.2in]
+
+    {\pop}     & \inferrule{\nnitem{\bm y}{\sigma \newmid i}{j}{s}}
+                           {\nnitem{\bm y\!\circ\!{\text `}\rightb{\text '}}{\sigma}{j\!+\!1}{s+\xi_{ij}}}
+                                                \hspace{.1cm} $~(x_i, x_j)~$ match  
+    \\[0.1in]
+  \end{tabular}
+&
+%\hspace{-.6cm}  
+  \begin{tabular}{ll}
+   input      & $x_1 \ldots x_n$ \\[0.1in]
+%\hline\\
+    state        & \nitemt{\bm \sigma}{j}{\bm{y}, s}  \\ [0.1in]
+
+    axiom        & \nitemt{\bm ~{\text `}~{\text '}}{1}{{\text `}{\text '}, 0} \\ [0.1in]
+
+    goal         & \nitemt{\bm ~{\text `}~{\text '}}{n+1}{\bm{y}, \_}  \\ [0.1in]
+
+    {\push}       & \inferrule{\nitemt{\bm \sigma}{j}{\bm{y},s}}
+                              {\nitemt{{\bm \sigma} \newmid j}{j\!+\!1}{\bm{y}\!\circ\!{\text `}\leftb{\text '},0}}   \\[0.2in]
+
+    {\nskip}       & \inferrule{\nitemt{\bm \sigma}{j}{\bm{y}, s}}
+                               {\nitemt{\bm \sigma}{j\!+\!1}{\bm{y}\!\circ\!{\text `}\mydot{\text '}, s+\delta}}   \\[0.2in]
+
+    {\pop}     & \inferrule{\nitemt{{\bm \sigma} \newmid i}{j}{\bm{y},s}}
+                           {\nitemt{\bm \sigma}{j\!+\!1}{\bm{y}\!\circ\!{\text `}\rightb{\text '}, s+\xi_{ij}}}%{A\cup \{(i,j)\}}}  
+                                                \hspace{.1cm} $~(x_i, x_j)~$ match  
+    \\[0.1in]
+  \end{tabular}
+   \\
+              & \\
+  & \\
+  ~~~~(a) exhaustive, $O(3^n)$ & ~~~~(b) Idea 1: identical-stack merge , $O(2^n)$ \\
+              & \\
+  & \\
+\end{tabular}
+
+      \\
+      
+\begin{tabular}{lll}
+%   input:      & 
+input & $x_1 \ldots x_n$ & \codeblue{$\alpha$} denotes a bracket-closed substructure  \\[0.1in]
+%\hline\\
+%    state:        & 
+state & \nitemt{i}{j}{\bml\codeblue{$\alpha$},s} & a dummy symbol \bml is added at the beginning of the state \\[0.1in]%\ensuremath{{\bm y}: \raisebox{-0.25em}{\tiny $i$} \bml \codeblue{\ensuremath{\alpha}} \raisebox{-0.25em}{\tiny $j$}} ~or~ \ensuremath{\raisebox{-0.25em}{\tiny $0$} \codeblue{\ensuremath{\alpha}} \raisebox{-0.25em}{\tiny $j$}}\;\\ [0.1in]
+
+% axiom:        & 
+axiom & \nitemt{0}{1}{\bml,0} \\ [0.1in] % & \ensuremath{{\text `}~{\text '}: \raisebox{-0.25em}{\tiny $0$}\codeblue{\!} \raisebox{-0.25em}{\tiny $1$}}\\ [0.1in]
+
+%    goal:         & 
+goal & \nitemt{0}{n+1}{\bml\codeblue{$\alpha$},\_} \\ [0.2in] % & \ensuremath{{\bm y}: \raisebox{-0.25em}{\tiny $0$} \codeblue{\ensuremath{\alpha}} \raisebox{-0.25em}{\tiny $n+1$}}  \\ [0.2in]
+
+%    {\push}       & 
+{\push} & \inferrule{\nitemt{i}{j}{\bml\codeblue{$\alpha$},s}}
+                              {\nitemt{j}{j\!+\!1}{\bml,0}} & \\ [0.2in]%\inferrule{{\bm y}: \raisebox{-0.25em}{\tiny $i$}\bml \codeblue{\ensuremath{\alpha}} \raisebox{-0.25em}{\tiny ~$j$}}{\quad\quad\quad\quad\quad\quad\raisebox{-0.25em}{\tiny $j$}\bml \codeblue{\!} \raisebox{-0.25em}{\tiny ~$j\Plus 1$}} \\ [0.2in]
+
+%    {\nskip}       & 
+{\nskip} & \inferrule{\nitemt{i}{j}{\bml\codeblue{$\alpha$},s}}
+                               {\nitemt{i}{j\!+\!1}{\bml\codeblue{$\alpha\md$},s+\delta}} \\ [0.2in]% & \inferrule{{\bm y}: \raisebox{-0.25em}{\tiny $i$}\bml \codeblue{\ensuremath{\alpha}} \raisebox{-0.25em}{\tiny ~$j$}}{\quad\quad\quad\raisebox{-0.25em}{\tiny $i$}\bml \codeblue{\ensuremath{\alpha\mydot}} \raisebox{-0.25em}{\tiny ~$j\Plus 1$}~} \\ [0.2in]
+
+%    {\pop}     & 
+{\pop} & \inferrule{\nitemt{k}{i}{\bml\codeblue{$\alpha$},s'} \quad \nitemt{i}{j}{\bml\codeblue{$\beta$},s}}
+                           {\nitemt{k}{j\!+\!1}{\bml\codeblue{$\alpha\ml\beta\mr$} ,s'+s+\xi_{ij}}} 
+         & $~(x_i, x_j)~$ match 
+%         \;\; \inferrule{{\bm y'}: \raisebox{-0.25em}{\tiny $k$} $\bml \codeblue{\ensuremath{\alpha}}$ \raisebox{-0.25em}{\tiny ~$i$}\quad\quad\quad{\bm y}: \raisebox{-0.25em}{\tiny $i$}\bml \codeblue{\ensuremath{\beta}} \raisebox{-0.25em}{\tiny ~$j$}~}{\raisebox{-0.25em}{\tiny $k$}\bml \codeblue{\ensuremath{\alpha~\ml~\beta~\mr}} \raisebox{-0.25em}{\tiny ~$j\Plus 1$}\quad\quad}
+  \\ [0.2in]
+  % {\ncombine} & \inferrule{\nitemt{0}{i}{\bml\codeblue{$\alpha$},s'} \quad \nitemt{i}{j}{\bml\codeblue{$\beta$},s}}
+  %               {\nitemt{0}{j}{\bml\codeblue{$\alpha\,\beta$}, s'+s} } \\
+  % & \inferrule{{\bm y'}: \raisebox{-0.25em}{\tiny $0$}\codeblue{\ensuremath{\alpha}} \raisebox{-0.25em}{\tiny $i$}\quad\quad{\bm y}: \raisebox{-0.25em}{\tiny $i$} \codeblue{\ensuremath{\beta}} \raisebox{-0.25em}{\tiny ~$j$}~}{\quad\raisebox{-0.25em}{\tiny 0}\codeblue{\ensuremath{\alpha~\beta}} \raisebox{-0.25em}{\tiny ~$j$}\;\quad\quad\quad\quad} 
+%    \\
+              & \\
+                & \\
+  \multicolumn{3}{c}{~~~~(c) Idea 2: stack-top packing, $O(n^3)$}
+\end{tabular}
+\end{tabular}
+  }
+\caption{The simplified deductive system of (a) exhaustive incremental search,
+  (b) merging by identical-stack, and (c) packing by stack-top as in \linearfold.
+  Here $\circ$ denotes string concatenation; $\delta$ scores the unpaired
+  nucleotide, and $\xi_{ij}$ scores a base pair. 
+We say $(a, b)$ ``matches'' if $(a,b)$ is one of the allowed pairs ({\tt C--G}, {\tt A--U}, {\tt G--U}).
+We also explain the meaning of the deductive system in (c) by highlighting bracket-closed substructures,
+i.e., a substring with balanced parentheses. % , e.g., {\tt ..}, {\tt (..)}, {\tt .().}, etc.
+\label{fig:deduction}}
+\end{figure}
+
+\iffalse
+\begin{figure}
+  \centering
+  \tikzset{>={stealth[scale=0.01]}}
+  \newcommand{\DrawNode}[2][]{%
+    \draw  [#1]
+    ([line width=0.02mm, shift={(-0.5\pgflinewidth,-0.5\pgflinewidth)}]#2.north east) -- 
+    ([line width=0.02mm, shift={(0.5\pgflinewidth,-0.5\pgflinewidth)}]#2.north west) -- 
+    ([line width=0.02mm, shift={(0.5\pgflinewidth,+0.5\pgflinewidth)}]#2.south west) -- 
+    ([line width=0.02mm, shift={(-0.5\pgflinewidth,+0.5\pgflinewidth)}]#2.south east)
+  }%
+% \hspace{2em}
+\begin{tabular}{c}
+  \setlength\tabcolsep{0.0em}  
+  \begin{tikzpicture}[
+        scale=1.5,
+    every node/.style={scale=1.5},
+    tcancel/.append style={draw=#1, cross out, inner sep=1pt},
+    ]
+    \matrix [matrix of nodes, row sep=0.07em, column sep=2.0em, align=left, nodes={inner sep=0.2em}] { %
+      &              &                & [-1.0em]    &              & \\
+       & {\tt step i} & {\tt step i+1} &    {\tt ...}     & {\tt step j} & {\tt step j+1} \\
+      \node(p00)[] {}; & \node(p01)[draw, scale = 1.2, minimum width = 6em] {\mq\mq$_{k_1}$\bml\codeblue{$\alpha_1$}~\color{white}{~~}}; & & & & \node(p05)[draw, scale = 1.2, minimum width = 6.5em] {\mq\mq$_{k_1}$\bml\codeblue{$\alpha_1$\ml$\beta$\mr}~\color{white}{~~}};\\
+      & \node(Ap01)[scale=1.00, inner sep=0.1em] {\small .. $k_1$\color{white}{}}; & & & & \node(Ap05)[scale=1.00, inner sep=0.1em] {\small .. $k_1$\color{white}{}}; \\ [1em]
+      \node(p10)[] {}; & \node(p11)[draw, scale = 1.2, minimum width = 6em] {\mq$_{k_2}$\bml\codeblue{$\alpha_2$}~\color{white}{~~~~}}; & \node(p12)[draw, scale = 1.2] {\mq\mq$_{i}$\bml\codeblue{~}}; & & \node(p14)[draw, scale = 1.2] {\mq\mq$_{i}$\bml\codeblue{$\beta$}~}; & \node(p15)[draw, scale = 1.2, minimum width = 6.5em] {\mq$_{k_2}$\bml\codeblue{$\alpha_3$\ml$\beta$\mr}~\color{white}{~~~~}};\\
+      & \node(Ap11)[scale=1.00, inner sep=0.1em] {\small .. $k_2$\color{white}{}}; & \node(Ap12)[scale=1.00, inner sep=0.1em] {\small .. $i$\color{white}{}};& & \node(Ap14)[scale=1.00, inner sep=0.1em] {\small .. $i$\color{white}{}}; & \node(Ap15)[scale=1.00, inner sep=0.1em] {\small .. $k_2$\color{white}{}};\\ [1em]
+        \node(p20)[] {}; & \node(p21)[draw, scale = 1.2, minimum width = 6em] {\mq\mq\mq$_{k_3}$\bml\codeblue{$\alpha_3$}~\color{white}{}}; & & & & \node(p25)[draw, scale = 1.2, minimum width = 6.5em] {\mq\mq\mq$_{k_3}$\bml\codeblue{$\alpha_3$\ml$\beta$\mr}~\color{white}{}}; \\
+        & \node(Ap21)[scale=1.00, inner sep=0.1em] {\small .. $k_3$\color{white}{}}; & & & & \node(Ap25)[scale=1.00, inner sep=0.1em] {\small .. $k_3$\color{white}{}};\\ [1em]
+      };
+      \DrawNode{Ap01};\DrawNode{Ap11};\DrawNode{Ap21};
+      \DrawNode{Ap12};
+      \DrawNode{Ap14};
+      \DrawNode{Ap05};\DrawNode{Ap15};\DrawNode{Ap25};
+
+      \draw[->, thick, color=red] (p01.0) -- node (loc4) [fill=white, inner sep=1pt, midway] {\scriptsize \ml} (p12.180); 
+      \draw[->, thick, color=red] (p11.0) -- node [fill=white, inner sep=1pt, midway] {\scriptsize \ml} (p12.180); 
+      \draw[->, thick, color=red] (p21.0) -- node (loc2) [fill=white, inner sep=1pt, midway] {\scriptsize \ml} (p12.180); 
+      
+      \draw[->, thick] (p12.0) -- node (locstar) [fill=white, inner sep=1pt, midway] {\scriptsize .~.~.} (p14.180);       
+      
+      \draw[->, thick, color=green] (p14.0) -- node (loc5) [fill=white, inner sep=1pt, midway] {\scriptsize \mr} (p05.180); 
+      \draw[->, thick, color=green] (p14.0) -- node [fill=white, inner sep=1pt, midway] {\scriptsize \mr} (p15.180); 
+      \draw[->, thick, color=green] (p14.0) -- node (loc3) [fill=white, inner sep=1pt, midway] {\scriptsize \mr} (p25.180); 
+      
+      % \draw[draw=blue!60,line width=3mm,-{Latex[length=6mm]},shorten >=1mm, shorten <=1mm] ($(loc3.270)+(0,-.15)$) -- ($(loc2.270)+(0,-.15)$)
+      % node[midway,text=white,font=\tiny,sloped]{unpack from packing};
+      % \draw[draw=blue!60,line width=3mm,-{Latex[length=6mm]},shorten >=1mm, shorten <=1mm] ($(loc5.90)+(0,0)$) -- ($(loc4.90)+(0,0)$)
+      % node[midway,text=white,font=\tiny,sloped]{unpack from packing};
+      % \node [above=.3em of locstar] {\scriptsize recursive}; 
+    \end{tikzpicture}
+\\ \end{tabular}
+    
+  \caption{ A demonstration of the packing and unpacking process in
+    % Figure~\ref{fig:deduction} (c)(d).
+    stack-top dynamic programming. 
+    \label{fig:packing} }
+\end{figure}
+\fi
+
+\begin{figure}
+  \centering
+  \includegraphics[width=.9\textwidth]{figs/pseudocode_deductivesystem.pdf}
+  \caption{Pseudocode of a simplified version of our \linearfold algorithm,
+    corresponding to Figure~\ref{fig:deduction}(c) plus beam search.
+    For the whole \linearfold system, please refer to our source code on Github.
+    Here we model hash tables following Python dictionaries,
+    where $(i,j) \in c$ checks whether the key $(i,j)$ is in the hash $c$; this is needed to ensure linear runtime.
+    \label{fig:pseudocode}}
+\end{figure}
+
+\newcommand{\ShapeE}{\ensuremath{\mathsf{E}}}
+\newcommand{\ShapeP}{\ensuremath{\mathsf{P}}}
+\newcommand{\ShapeH}{\ensuremath{\mathsf{H}}}
+\newcommand{\ShapeM}{\ensuremath{\mathsf{M_1}}}
+\newcommand{\ShapeMt}{\ensuremath{\mathsf{M_2}}}
+\newcommand{\ShapeMulti}{\ensuremath{\mathsf{M}}}
+\newcommand{\hjump}{\ensuremath{\ShapeH\mathsf{jump}}\xspace}
+\newcommand{\npair}{\ensuremath{\mathsf{hairpin}}\xspace}
+\newcommand{\nreduce}{\ensuremath{\mathsf{reduce}}\xspace}
+\newcommand{\single}{\ensuremath{\mathsf{singleloop}}\xspace}
+\newcommand{\multi}{\ensuremath{\mathsf{multiloop}}\xspace}
+\newcommand{\multileft}{\ensuremath{\ShapeMulti\mathsf{left}}\xspace}
+\newcommand{\multijump}{\ensuremath{\ShapeMulti\mathsf{jump}}\xspace}
+
+\newcommand{\xtom}{\ensuremath{\mathsf{XtoM_1}}\xspace}
+\newcommand{\myus}{\ensuremath{\text{\tt \_\,}}\xspace}
+
+\begin{figure}
+  \centering
+  \scalebox{1.2}{
+    \begin{tabular}{lll}
+      input      & $x_1 \ldots x_n$ &  \\[0.1in]
+      states & $\ShapeE$ \nitemt{0}{j}{\codeblue{$\alpha$}, s}  &  prefix structure \\[0.1in] % & $_0 \codeblue{\ensuremath{\myus\myus\myus}}_j$~, where \codeblue{\ensuremath{\myus\myus\myus}} denotes a bracket-closed substructure \\[0.1in]
+                 & $\ShapeP$ \nitemt{i}{j}{\codeblue{\ml$\alpha$\mr}, s} & pair \\[0.1in] % & $_i\codeblue{\ensuremath{\leftb\myus\myus\myus\rightb}}_j$ \\[0.1in]
+                 & $\ShapeH$ \nitemt{i}{j}{\bml\codeblue{\md\md\md},s} & hairpin candidate \\[0.1in] % & $_i\bml\codeblue{\ensuremath{\md\md\md}}_j$~,  where \codeblue{\ensuremath{\md\md\md}} is 1+ unpaired nucleotide(s) \\[0.1in]
+                 & $\ShapeM$ \nitemt{i}{j}{\codeblue{\ml$\alpha$\mr$\beta$},s} & one or more pairs \\[0.1in]%  & $_i \underbracket[0.1em]{\overbracket[0.1em]{\codeblue{\ensuremath{\leftb\myus\myus\myus\rightb}}}^{\ShapeP}\!\!\codeblue{\ensuremath{\md\md\md~\myus\myus\myus}}\!\!\overbracket[0.1em]{\codeblue{\ensuremath{\leftb\myus\myus\myus\rightb}}}^{\ShapeP}\!\codeblue{\ensuremath{\md\md\md}}}_{\text{
+                                                                                                                   % 1+ \ShapeP s, each followed by 0+ unpaired nucs
+                 %followed by 0+ unpaired nucs
+                                                                                                                   % }} \;_j$ \\[0.2in]
+                 & $\ShapeMt$ \nitemt{i}{j}{\codeblue{\ml$\alpha$\mr$\beta$\ml$\gamma$\mr},s} & two or more pairs \\[0.1in] %  & $_i \underbracket[0.1em]{\overbracket[0.1em]{\codeblue{\ensuremath{\leftb\myus\myus\myus\rightb}}}^{\ShapeP}\!\!\codeblue{\ensuremath{\md\md\md~\myus\myus\myus}}\!\!\overbracket[0.1em]{\codeblue{\ensuremath{\leftb\myus\myus\myus\rightb}}}^{\ShapeP}}_{\text{2+ \ShapeP s, separated by 0+ unpaired nucs
+                                                                                                                                       % }} \;_j$ \\[0.2in]
+                 & $\ShapeMulti$ \nitemt{i}{j}{\bml\codeblue{\md\md\md\ml$\alpha$\mr$\beta$\ml$\gamma$\mr\md\md\md},s} &  multiloop candidate \\[0.2in] % & $_i \underbracket[0.1em]{\bml\codeblue{\ensuremath{\md\md\md}}\!\!\overbracket[0.1em]{\codeblue{\ensuremath{\leftb\myus\myus\myus\rightb}}}^{\ShapeP}\!\!\codeblue{\ensuremath{\md\md\md~\myus\myus\myus}}\!\!\overbracket[0.1em]{\codeblue{\ensuremath{\leftb\myus\myus\myus\rightb}}}^{\ShapeP}\!\codeblue{\ensuremath{\md\md\md}}}_{\text{
+                 % a \bml followed by 2+~\ShapeP s, %separated by 0+ unpaired nucs
+                 % each surrounded by 0+ unpaired nucs  %(multiloop candidate)
+                 % }} \;_j$ \\[0.3in]
+                 
+                 %$_i \underbracket[0.1em]{\overbracket[0.1em]{\codeblue{\ensuremath{\leftb\myus\myus\myus\rightb}}}^{\ShapeP}\!\!\codeblue{\ensuremath{\md\md\md~ \cdot\cdot\cdot\cdot\cdot\cdot}}\!\!\overbracket[0.1em]{\codeblue{\ensuremath{\leftb\myus\myus\myus\rightb}}}^{\ShapeP}}_{\text{two or more~} \ShapeP\text{s}} \;_j$ \\[0.1in]
+      axiom & $\ShapeE$ \nitemt{0}{1}{\codeblue{\!},0} %\\[0.1in]
+      & goal \qquad $\ShapeE$ \nitemt{0}{n\!\!+\!1}{\codeblue{$\alpha$},\_} \\[0.1in]
+      {\push}  & \inferrule{\ \ \ \ \ \ \ \ \ \  \ShapeE \nitemt{0}{j}{\codeblue{$\alpha$},s}}{ \ShapeH \nitemt{j}{\jnext(j,j)}{\bml\codeblue{\md\md}, 0}} & $\jnext(i,j) \triangleq \min\{k \mid k>j, \ (x_i,x_{k})~\text{match}\}$ \\[0.2in] %  
+      {\hjump} & \inferrule{\ \ \ \ \ \ \ \ \ \ \ShapeH \nitemt{i}{j}{\bml\codeblue{\md\md\md}, s}}{ \ShapeH \nitemt{i}{\jnext(i,j)}{\bml\codeblue{\md\md\md\md\md}, s}} \\[0.2in]
+      {\nskip}   & \inferrule{ \ShapeE \nitemt{0}{j}{\codeblue{$\alpha$}, s} \ \ \ \ \ \ }{ \ShapeE \nitemt{0}{j\!\!+\!1}{\codeblue{$\alpha$\md}, s \!\!+\! \delta^E}} %\\[0.2in]
+                 & \inferrule{ \ShapeM \nitemt{i}{j}{\codeblue{$\ml\alpha\mr\beta$}, s} \ \ \ \ \ \ }{ \ShapeM \nitemt{i}{j\!\!+\!1}{\codeblue{\ml$\alpha\mr\beta$\md}, s \!\!+\! \delta^M}} \\[0.2in]
+      {\nreduce} & \inferrule{ \ShapeM \nitemt{k}{i}{\codeblue{$\ml\alpha\mr\beta$}, s'} \quad \quad \ShapeP \nitemt{i}{j}{\codeblue{$\ml\gamma\mr$}, s}}{ \ShapeMt \nitemt{k}{j}{\codeblue{$\ml\alpha\mr\beta\ml\gamma\mr$} , s'\!\!+\!s\!\!+\!\xi_{ij}^M}} \\[0.2in]
+      {\ncombine} & \inferrule{ \ShapeE \nitemt{0}{i}{\codeblue{$\alpha$},s'} \quad\quad \ShapeP \nitemt{i}{j}{\codeblue{$\ml\beta\mr$}, s}}{ \ShapeE \nitemt{0}{j}{\codeblue{$\alpha\ml\beta\mr$}, s'\!\!+\!s\!\!+\!\xi_{ij}^E}} \\[0.2in]
+      {\xtom} & \inferrule { \ShapeP \nitemt{i}{j}{\codeblue{$\ml\alpha\mr$},s} \ \ \ \ \ \ }{ \ShapeM \nitemt{i}{j}{\codeblue{$\ml\alpha\mr$},s\!\!+\!\xi_{ij}^M}} %\\[0.2in]
+      & \inferrule { \ShapeMt \nitemt{i}{j}{\codeblue{$\ml\alpha\mr\beta\ml\gamma\mr$},s}}{ \ShapeM \nitemt{i}{j}{\codeblue{$\ml\alpha\mr\beta\ml\gamma\mr$},s}} \\[0.2in]
+      {\multileft} & \inferrule{\ShapeMt \nitemt{i}{j}{\codeblue{$\ml\alpha\mr\beta\ml\gamma\mr$}, s} \ \ \ \ \ \ \ \ \ \ \ \ \ }{\ShapeMulti \nitemt{k}{\jnext(k,j)}{ \bml\codeblue{$\md\md\md\ml\alpha\mr\beta\ml\gamma\mr\md\md$}, s\!\!+\!u\cdot \delta^M } } &  $u = (\jnext(k,j)\!-\!j)\!\!+\!(i\!-\!k\!-\!1) \leq 30$\\[0.2in]
+      {\multijump} & \inferrule{\ShapeMulti \nitemt{i}{j}{\bml\codeblue{$\md\md\md\ml\alpha\mr\beta\ml\gamma\mr\md\md\md$}, s} \ \ \ \ }{\ShapeMulti \nitemt{i}{\jnext(i,j)}{\bml\codeblue{$\md\md\md\ml\alpha\mr\beta\ml\gamma\mr\md\md\md\md\md$}, s\!\!+\!u\cdot \delta^M }  } & $u = \jnext(i,j) \!\!-\! j$ \\[0.2in]
+      {\npair} & \inferrule{ \ShapeH \nitemt{i}{j}{\bml\codeblue{$\md\md\md$},s} \ \ \ \ \ \ }{ \ShapeP \nitemt{i}{j\!\!+\!1}{\codeblue{\ml\md\md\md\mr}, s\!\!+\!\xi_{ij}^H} }\\[0.2in]
+      {\single} & \inferrule{ \ShapeP \nitemt{i}{j}{\codeblue{$\ml\alpha\mr$},s} \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }{ \ShapeP \nitemt{k}{l}{ \codeblue{\ml\md\md\md$\ml\alpha\mr$\md\md\md\mr},s\!\!+\!\xi_{ij}^S\!\!+\!\omega_{ijlk}^S }} &  $~(x_k, x_{l\!-\!1})~$ match, $(l\!-\!j\!-\!1)\!\!+\!(i\!-\!k\!-\!1) \leq 30$ \\[0.2in]
+      {\multi} & \inferrule{ \ShapeMulti \nitemt{i}{j}{\bml\codeblue{$\md\md\md\ml\alpha\mr\beta\ml\gamma\mr\md\md\md$},s}\ \ \ \ \ \ }{ \ShapeP \nitemt{i}{j\!\!+\!1}{\codeblue{$\ml\md\md\md\ml\alpha\mr\beta\ml\gamma\mr\md\md\md\mr$}, s\!\!+\!\xi_{ji}^M\! }} & % $~(x_k, x_{l\!-\!1})~$ match, $u = (l\!-\!j\!-\!1)\!\!+\!(i\!-\!k\!-\!1) \leq 30$
+      \\[0.2in]
+    \end{tabular}
+  }
+  \caption {The actual deductive system implemented in \linearfold program.
+  Here $\delta^E$, $\delta^M$, $\xi^M_{ij}$, $\xi^E_{ij}$, $\xi^H_{ij}$, $\xi^S_{ij}$, and $\omega^S_{ijlk}$
+  are the various energy or scoring parameters ($E$ stands for external loop, $M$ for multiloop, $S$ for single loop, and $H$ for hairpin loop).
+  Our \linearfold algorithm can linearize any dynamic programming-based pseudoknot-free RNA secondary structure prediction algorithm.
+  The $\jnext(i, j)$ returns the next position after $x_j$ that can pair with $x_i$;
+  this is the ``jumping'' trick used in \contrafold and \viennarna to speedup from the theoretical runtime of $O(n^3)$ to
+  the empirical  $O(n^{2.6})$
+  (see Fig.~\ref{fig:time}). Our final two rules also use this jumping trick in the righthand side loop.
+  The only cubic-time rule is \nreduce (intermediate step in multiloop), again inspired by \contrafold source code.
+  %% scores the unpaired
+  %% nucleotide, and $\xi_{ij}$ scores a base pair.
+    \label{fig:realdeduct}}
+\end{figure}%% less
+
+% \begin{figure}
+%   \centering
+%   \hspace{-5em}
+%   \scalebox{1.2}{
+%   \begin{tabular}{llll}
+%     \toprule
+%     Method & Global or Local & Time Complexity & \\
+%     \midrule
+%     CONTRAfold\cite{do+:2006}  & \multirow{3}{*}{Global} & \multirow{3}{*}{$O(n^3)$} & \\
+%     RNAstructure\cite{mathews+turner:2006}  &  &  & \\
+%     Vienna RNAfold\cite{lorenz+:2011}  &  &  & \\
+%     \midrule
+%     Rfold\cite{kiryu+:2007}  & \multirow{3}{*}{Local} &  \multirow{3}{*}{$\Omega(nL^2)$}& \\
+%     Vienna RNAplfold\cite{bernhart+:2005}  &  &  & \\
+%     LocalFold\cite{Lange+:2012}  &  &  & \\
+%     \midrule
+%     \linearfold  & Global & $O(nb\log b)$ & \\
+%     \bottomrule
+%   \end{tabular}
+%   }
+%   \caption{A summary of time complexity of different local/global RNA secondary
+%   structure prediction algorithms. \label{fig:related}}
+% \end{figure}

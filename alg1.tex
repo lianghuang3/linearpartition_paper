@@ -1,0 +1,129 @@
+% \documentclass[1pt]{article}
+\documentclass[preview]{standalone}
+% \documentclass[border=2pt]{standalone}
+\usepackage[a5paper]{geometry}
+
+\title{algorithm}
+
+% From the package documentation:
+% "The package algorithmicx itself doesn’t define any
+% algorithmic commands, but gives a set of macros to 
+% define such a command set.  You may use only 
+% algorithmicx, and define the commands yourself, or you 
+% may use one of the predefined command sets."
+% 
+% Popular predefined command sets include algpseudocode and algpascal. algcompatible should only be used in old documents, and algc is incomplete.
+
+% \usepackage{algpseudocode}
+\usepackage[noend]{algorithmicx}
+\usepackage[noline,boxruled,commentsnumbered,linesnumbered,titlenumbered]{algpseudocode}
+
+\algrenewcommand\algorithmicindent{1.0em}%
+% \usepackage{algorithm2e}
+\algtext*{EndFor}% Remove "end while" text
+\algtext*{EndIf}% Remove "end if" text
+\algtext*{EndFunction}% Remove "end if" 
+\algtext*{EndProcedure}% Remove "end procedure" text
+% \usepackage[options ]{algorithm2e}
+
+
+% \usepackage{xpatch}
+
+% \makeatletter
+% \xpatchcmd{\algorithmic}
+%   {\ALG@tlm\z@}{\leftmargin\z@\ALG@tlm\z@}
+%   {}{}
+% \makeatother
+
+% \newlength\myindent
+% \setlength\myindent{2em}
+% \newcommand\bindent{%
+%   \begingroup
+%   \setlength{\itemindent}{\myindent}
+%   \addtolength{\algorithmicindent}{\myindent}
+% }
+% \newcommand\eindent{\endgroup}
+
+\newcommand{\pluseq}{\mathrel{+}=}
+\let\oldReturn\Return
+\renewcommand{\Return}{\State\oldReturn}
+
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+
+
+\begin{document}
+
+% \noindent
+% With \verb|\SetInd{0.25em}{0.1em}|:
+% \SetInd{0.25em}{0.1em}
+
+% LinearPartition Algorithm: Simplified Version
+\begin{algorithmic}[1]
+% \begin{algorithm}[H]
+% \SetAlgoLined
+% \Require $n \geq 0$
+% \Ensure $y = x^n$
+\newcommand{\INDSTATE}[1][1]{\STATE\hspace{#1\algorithmicindent}}
+
+\Procedure{LinearPartition}{$\mathbf x$}
+% \bindent
+    \State $n \gets$ length of $\mathbf x$
+    \State $Q \gets$ hash() \Comment{hash table: from key $(i,j)$ to score}
+    \State $Q(0,1) \gets 1$ \Comment{axiom} 
+    \For{$j=1,...n$}
+        % \State $C(0,j+1) \gets C(0,j) \cdot e^{-\frac{\delta(\mathbf{x},j)}{RT}} $ %\Comment{Initialize}
+        \State $Q(j,j+1) \gets 1$ \Comment{PUSH} % 1 = e{-(0/RT)}
+        % \State $C(0,j+1) \gets C(0,j)$ \Comment{Initialize}
+        \ForEach{key $(i,j)$ in $Q$}
+            \State $Q(i,j+1) \gets Q(i,j) \cdot e^{-\frac{\delta(\mathbf{x},j)}{RT}} $ \Comment{SKIP}
+            \If{$(x_i,x_j)$ in \{AU, UA, CG, GC, GU, UG\}} 
+                % \State $Q_{i,j+1} \gets  C(i,j) \cdot e^{-\frac{\xi(\mathbf{x},i,j)}{RT}} $
+                \ForEach{key $(k,i)$ in $Q$}
+                    \State $Q(k,j+1) \pluseq {Q(k,i) \cdot Q(i,j) \cdot e^{-\frac{\xi(\mathbf{x},i,j)}{RT}}} $ \Comment{POP}
+                    % \State $C(0,j+1) \pluseq {C(0,k) \cdot C(k,j+1) \cdot e^{-\frac{\xi(\mathbf{x},i,j)}{RT}}} $
+                \EndFor
+                % \State $C(0,j+1) \pluseq C(0,i) \cdot Q_{i,j+1}$ \Comment{COMBINE}
+            \EndIf
+        \EndFor
+        \State $\textsc {BeamPrune}(Q,j+1, \textrm {beamsize})$
+    \EndFor
+    \Return $Q(0,n+1)$
+% \eindent
+\EndProcedure
+
+% \\
+
+% \Function{beamprune}{$Q, j, b$}
+%     \State $cands \gets$ hash() \Comment{hash table: from candidates $i$ to score}
+%     \ForEach{key $(i,j)$ in $Q$}
+%         \State $cands(i) \gets Q(0,i) \cdot Q(i,j)$ \Comment{$Q(0,i) $ as prefix score}
+%     \EndFor
+%     \State $cands \gets$ SelectTopB($cands, b$) \Comment{select top-$b$ by score}
+%     \ForEach{key $(i,j)$ in $Q$}
+%         \If{key $i$ not in $cands$}
+%             \State delete $(i,j)$ in $Q$ \Comment{prune out low-scoring states}
+%         \EndIf
+%     \EndFor
+% \EndFunction
+        
+
+
+
+
+% \State $y \gets 1$
+% \State $X \gets x$
+% \State $N \gets n$
+% \While{$N \neq 0$}
+% \If{$N$ is even}
+%   \State $X \gets X \times X$
+%   \State $N \gets \frac{N}{2} $  \Comment{This is a comment}
+% \ElsIf{$N$ is odd}
+%   \State $y \gets y \times X$
+%   \State $N \gets N - 1$
+% \EndIf
+% \EndWhile
+\end{algorithmic}
+% \end{algorithm}
+
+\end{document}

@@ -1,0 +1,44 @@
+% !TEX root = \linearpartition.tex
+
+\subsection{Summary}
+
+
+
+\subsection{Analysis}
+
+
+\subsection{Extensions}
+
+Our algorithm has several potential extensions.
+
+\begin{enumerate}
+\item 
+We will linearize the partition function-based heuristic pseudoknot prediction methods such as ProbKnot, IpKnot, and Dotknot by replacing their bottleneck $O(n^3)$-time calculation of the partition function with our LinearPartition. 
+All these heuristic methods uses rather simple heuristic criteria to choose pairs from the base pair probability matrix. 
+For example, the second step of probknot selects base pairs $(i,j)$ where the $i–j$ pairing probability is the largest for both bases $i$ and $j$. 
+This might appear as $O(n^2)$ in the worst case, 
+but since the linear-time beam search used in \linearpartition only returns $O(nb)$ pairs where $b$ is the constant beam size, 
+this second step is still $O(n)$, 
+giving an overall linear-time method, LinearProbKnot. 
+We can similary get LinearIPknot, LinearProbknot and LinearDotKnot, etc.
+With these promising substantial results of \linearpartition, 
+we believe LinearProbknot (and LinearIPknot, LinearDotKnot, etc) should be as accurate as, if not more accurate than, their original $O(n^3)$ versions.
+
+\item Accelerate and Improve bimolecular and multistrand structure prediction.
+\linearpartition provide important new ways to improve existing bimolecular and multistrand structure prediction algorithm such as AccessFold \cite{DiChiacchio+:2016}. 
+\linearpartition will provide a much faster solution to the accessibility calculation.
+Also, \linearpartition will help include predictions of intramolecular and bimolecular pairs, re
+ have immediate impact on our ability to predict bimolecular structures by improving speed and also providing additional structure information to users.
+
+
+\end{enumerate}
+
+
+
+
+
+Aim 3b: Accelerate and Improve bimolecular and multistrand structure prediction
+Many ncRNAs function by interacting with other RNA sequences by base pairing. We developed several software tools for predicting base pairing structures between two sequences (bimolecular) [81, 68, 23, 24]. There are two important barriers to accurate bimolecular structure prediction. First, RNA sequences form self-structure that prevents bimolecular structure prediction. We account for this in our AccessFold algorithm, which is part of the RNAstructure software package and uses a partition function calculation to approximate the accessibility [23] The second barrier is that many simple bimolecular structures that also include unimolecular pairs, such as the kissing hairpin [13], are tantamount to pseudoknots in our algorithms.
+
+The linear algorithms from aims 1 and 2 provide important new ways to improve our existing AccessFold algo- rithm. First, the linear partition function calculation (Aim 1a) will provide a much faster solution to the accessibility calculation. Second, the linear pseudoknot prediction (aim 2) will provide us with the algorithm needed to elevate AccessFold to include predictions of intramolecular and bimolecular pairs. Currently, AccessFold only provides the pairs between strands, ignoring the pairs within a strand.
+We will advance AccessFold to incorporate the new algorithms from aims 1 and 2 and test it against a database of bimolecular structures we developed previously [23]. This will have immediate impact on our ability to predict bimolecular structures by improving speed and also providing additional structure information to our users.

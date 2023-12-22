@@ -1,0 +1,316 @@
+\PassOptionsToPackage{square,comma,numbers,sort&compress,super}{natbib}
+\documentclass[9pt,twocolumn,twoside]{pnas-new}
+% Use the lineno option to display guide line numbers if required.
+% Note that the use of elements such as single-column equations
+% may affect the guide line number alignment. 
+%\usepackage{titling} % multiple title
+\usepackage{balance} % balance last page of references
+\usepackage{fancyvrb}
+
+\usepackage{adjustbox}
+
+
+\usepackage{stackengine,scalerel}
+% \usepackage{hyperref}
+ 
+\def\useanchorwidth{F}
+\def\stackalignment{r}%
+\newcommand\overlap{\scalerel*{\hspace{.5mm}\stackinset{c}{-1.5pt}{c}{}{$O$}{$L$}}{+}}
+ 
+
+
+\templatetype{pnasresearcharticle} % Choose template 
+% {pnasresearcharticle} = Template for a two-column research article
+% {pnasmathematics} = Template for a one-column mathematics article
+% {pnasinvited} = Template for a PNAS invited submission
+
+% \usepackage{bold-extra}
+% \usepackage{setspace}
+% \usepackage[margin=0.55in]{geometry}
+% \usepackage{fullpage}
+% \usepackage{rotating}
+% \usepackage{pdflscape}
+
+% \usepackage[scaled]{helvet}
+% \renewcommand\familydefault{\sfdefault} 
+% \usepackage[T1]{fontenc}
+% \usepackage{upquote}
+
+\usepackage{booktabs}
+% \usepackage{algpseudocode}
+
+%\usepackage[blue]{url}
+\usepackage{subfig}
+\usepackage[11pt]{moresize}
+\renewcommand{\marginpar}[1]{}
+
+       %% \setlength{\oddsidemargin}{0.5in}
+       %% \setlength{\evensidemargin}{0.5in}
+       %% \setlength{\textwidth}{15cm}
+
+       %%  \setlength{\topmargin}{0.5in}
+%% \setlength{\textheight}{25cm}
+
+\newcommand{\sub}[1]{\ensuremath{_{\mathsf{#1}}}} 
+% \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+\usepackage{mathtools}
+\usepackage{times}
+%\usepackage{CJK}
+\usepackage{urcsbiblio}
+\usepackage{latexsym}
+\usepackage{multirow}
+\usepackage{arydshln}
+
+%% \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+%%             \node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
+%% \usepackage[pdf]{pstricks}
+%% \usepackage{pst-node,pst-coil}
+
+\usepackage{graphicx}
+\usepackage{ulem}	% to define \uline
+\normalem
+
+\usepackage{examples}
+\exampleindent1.5em       
+
+\usepackage{pdfpages}
+\usepackage{xspace}
+\usepackage{amssymb,amsmath,epsfig}
+\usepackage{mathpartir}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+%\usepackage{algorithm}
+%\usepackage{pifont}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
+
+\usetikzlibrary{matrix, positioning, arrows.meta, calc, shapes, decorations,
+  backgrounds, arrows, decorations.pathreplacing}
+\usepackage{pgfplots, siunitx}
+\usepackage{hhline}
+
+\input{defs} % lhuang: definitions
+\usepackage[superscript,biblabel]{cite}
+
+\renewcommand{\topfraction}{.85}
+\renewcommand{\bottomfraction}{.8}
+\renewcommand{\textfraction}{.1}
+\renewcommand{\floatpagefraction}{.8}
+\renewcommand{\dbltopfraction}{.8}
+\renewcommand{\dblfloatpagefraction}{.8}
+
+\title{\linearpartition: Linear-Time Approximation of RNA Folding Partition Function and Base Pairing Probabilities}
+
+% Use letters for affiliations, numbers to show equal authorship (if applicable) and to indicate the corresponding author
+
+\author[a]{He Zhang}
+\author[b]{Liang Zhang}
+\author[c,d,e]{David H.~Mathews}
+\author[a,b,$\clubsuit$]{Liang Huang}
+
+\affil[a]{Baidu Research USA, Sunnyvale, CA 94089, USA}
+\affil[b]{School of Electrical Engineering ~\& Computer Science,
+  Oregon State University, Corvallis, OR 97330, USA}
+\affil[c]{Dept. of Biochemistry ~\& Biophysics}
+\affil[d]{Center for RNA Biology}
+\affil[e]{Dept. of Biostatistics ~\& Computational Biology, University of Rochester Medical Center, Rochester, NY 14642, USA}
+
+% Please give the surname of the lead author for the running footer
+\leadauthor{Zhang} 
+
+% Please add here a significance statement to explain the relevance of your work
+% \significancestatement{
+%   \textbf{\input{significance}}
+% }
+
+% Please include corresponding author, author contribution and author declaration information
+% \authorcontributions{Please provide details of author contributions here.}
+\authordeclaration{The authors declare no conflict of interest.\\[-0.5cm]}
+
+\authorcontributions{Author contributions: 
+L.H.~conceived the idea and directed the project. % based on D.H.'s suggestion.
+%and directed the project.
+L.H. and H.Z.~designed algorithms.
+% H.Z. and L.Z.~wrote a Python prototype,
+% H.Z.~wrote the fast C++ version.
+H.Z.~wrote the Python prototype and fast C++ version.
+L.Z.~wrote MEA code for evaluation.
+D.H.M.~guided the evaluation % of the algorithm,
+that H.Z.~and L.Z.~carried out. % testing and plotted figures.
+H.Z. and L.H.~wrote the manuscript; D.H.M.~revised it.
+%H.Z.~verified code and data.
+%D.H.~revised it.
+%All of K.Z.'s
+% The bulk part of L.H.'s, most of D.D.'s, and all of K.Z.'s work were done at Oregon State University.
+}
+%% \equalauthors{\textsuperscript{1}%Equal contribution.
+%% K.Z.'s contribution was done at School of EECS, Oregon State University.}
+\correspondingauthor{
+  \textsuperscript{$\clubsuit$}%To whom correspondence should be addressed.
+  Corresponding author: {liang.huang.sh@gmail.com}. 
+  % \textsuperscript{$\diamondsuit$}Equal contribution.  %These authors contributed equally.
+}
+
+% Keywords are not mandatory, but authors are strongly encouraged to provide them. If provided, please include two to five keywords, separated by the pipe symbol, e.g:
+% \keywords{RNA $|$ secondary structure prediction $|$ linear-time $|$ dynamic programming $|$ beam search} 
+
+\begin{abstract}
+  %%%%%% ABSTRACT %%%%%%
+%%  ABSTRACT:
+\vspace{-0.2cm}
+ % what:
+% RNA secondary structure prediction is a well-known problem, and it has been used for medical design. 
+RNA secondary structure prediction 
+% is an important problem which has a series of downstream applications.
+is widely used to understand RNA function.
+% Compared with MFE-based methods, partition function-based methods have gained more and more attention due to their higher accuracy and ability to predict pseudoknots.
+Recently, there has been a shift away from the classical minimum free energy (MFE) methods to partition function-based 
+% ones that assemble structures with base pairing probabilities. 
+methods that account for folding ensembles and can therefore estimate structure and base pair probabilities. 
+% why:
+% However, partition function calculation, as well as the downstream base pairing probability prediction, uses cubic algorithm and is slow. This slowness is even more severe than cubic MFE-based methods because of the larger cost in the inner loop. 
+However, the classic partition function algorithm scales cubically with sequence length, 
+and 
+% suffers slowness 
+is therefore a slow calculation
+for long sequences.
+This slowness is even more severe than cubic-time MFE-based methods due to a larger constant factor in runtime.
+% how:
+% To address this, we present \linearpartition, a novel algorithm that can calculate partition function and base pairing probability in both linear runtime and linear memory space with RNA sequence length.
+% Recently, \linearfold introduced to MFE-based method with a novel dynamic programming parsing and beam search pruning borrowed from computational linguistic, 
+% and achieves even higher prediction accuracy with significantly reduced computation time.
+Inspired by the success of \linearfold algorithm that computes the MFE structure in linear time,
+we address this issue by proposing a similar linear-time heuristic algorithm,
+\linearpartition, to approximate the partition function 
+and base pairing probabilities.
+% To address this issue, we present a linear-time heristic algorithm, \linearpartition, to approximate the partition function 
+% and base pairing probabilities,
+% inspired by the recently proposed LinearFold algorithm
+% which compute MFE structure in linear time. 
+% To further accelarate partition function-based method, we present \linearpartition, which inherits \linearfold main idea and applies it to  
+% partition function and base pairing probability calculation, 
+% and leads to a small accuracy improvement in both linear runtime and linear memory space.
+% wow:
+% \linearpartition reduces classical cubic runtime by pruning states with lower energy. Although it neglects some substructure, but only the ones with worse free energy are given up, and results in a similar partition function as exact search. \linearpartition is 10$\times$ faster than \viennarnafold for the longest sequence (about 3000 nucleotides) in the dataset. Not only fast, \linearpartition is as accurate as \viennarnafold when comparing MEA and ProbKnot output structure. 
+% Surprisingly, even though \linearpartition uses an inexact search, it achieves better accuracy on longer families (16S and 23S rRNA).
+\linearpartition is 
+% 11$\times$ faster than \viennarnafold for the longest sequence (2,968 nucleotides) in ArchiveII dataset, 
+% and 
+256$\times$ faster than \viennarnafold
+for a sequence with length 15,780,
+and 2,771$\times$ faster than \contrafold
+for a sequence with length 32,753.
+% for the longest sampled sequence (15,780 nucleotides) from RNAcentral that \viennarnafold can run.
+% should mentioned contrafold?
+Interestingly, although \linearpartition is approximate, 
+it runs in linear time without sacrificing accuracy 
+when 
+% applied to downstream structure prediction tasks such as MEA and ThreshKnot (a thresholded version of ProbKnot), 
+base pair probabilities are used to assemble structures,
+and even leads to a small accuracy improvement on longer families (16S and 23S rRNA).
+  \vspace{-0.6cm}
+  %% The idea is based on 
+  %% complexity by incrementally labeling the nucleotides with dynamic programming
+  %% and beam search pruning.
+  %% By adapting our approach to both machine-learned and thermodynamic models, the
+  %% results on several datasets show that our approach outperforms all previous
+  %% methods in accuracy, while using significantly reduced amounts of time.   
+
+
+\end{abstract}
+
+% \dates{This manuscript was compiled on \today}
+\dates{}
+% \doi{\url{www.pnas.org/cgi/doi/10.1073/pnas.XXXXXXXXXX}}
+\doi{Nature Communications Submission}
+
+\begin{document}
+
+% Optional adjustment to line up main text (after abstract) of first page with line numbers, when using both lineno and twocolumn options.
+% You should only change this length when you've finalised the article contents.
+\verticaladjustment{-2pt}
+
+\maketitle
+\thispagestyle{firststyle}
+\ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
+
+% If your first paragraph (i.e. with the \dropcap) contains a list environment
+% (quote, quotation, theorem, definition, enumerate, itemize...), the line after
+% the list may have some extra indentation. If this is the case, add \parshape=0
+% to the end of the list environment.
+
+
+%%%%%% INTRO %%%%%%
+
+\label{sec:intro}
+\input{intro}
+
+% \label{sec:rnaintro}
+% \input{rnaintro}
+
+% \label{sec:linpar}
+% \input{linpar}
+
+\label{sec:results}
+\input{results}
+
+\label{sec:discussion}
+\input{discussion}
+
+\label{sec:methods}
+\input{methods}
+
+\label{sec:data}
+\input{data}
+
+% \showmatmethods{
+%   % \ssmall
+%   \section*{Methods}
+%   \label{sec:method}  
+% Detailed description of our algorithms, datasets, and evaluation metrics %statements of data availability and any associated accession codes and references,
+% are available in the online version of the paper. 
+% % \input{method}
+% } % Display the Materials and Methods section
+
+\acknow{\small 
+% This work was partially supported by 
+% NSF grants IIS-1656051 and IIS-1817231 and a Google Gift 
+% (L.H.),
+% NIH grants R56 AG053460 and R21 AG052950 (D.H.),
+% and NIH grant R01GM076485 (D.H.M.).
+% We thank
+% James Cross for help in algorithm design,
+% %Kaibo Liu for the web demo and LinearFold web server,
+% Max Ward-Graham for suggestions in algorithms and analysis,
+% and Juneki Hong %and He Zhang
+% for proofreading.
+%visualizing the prediction results on 3 families.
+}
+
+\showacknow{} % Display the acknowledgments section
+\smallskip
+
+% \pnasbreak splits and balances the columns before the references.
+% Uncomment \pnasbreak to view the references in the PNAS-style
+% If you see unexpected formatting errors, try commenting out \pnasbreak
+% as it can run into problems with floats and footnotes on the final page.
+%\pnasbreak
+
+% Bibliography
+\section*{References}
+\balance
+% \bibliographystyle{abbrvnat}
+\bibliography{main}
+
+\appendix
+
+\newpage
+
+% \input{method}
+
+\input{si}
+
+%\includepdf[pages=-]{si.pdf}
+
+\end{document}

@@ -1,0 +1,202 @@
+% !TEX root = \linearpartition.tex
+
+\subsection{\linearpartition Algorithm}
+
+\begin{figure}[t]%[b]
+\center
+% \hspace{-0.23cm}\includegraphics[scale=.16]{figs/index} \\[-3.cm]
+\hspace{-0.23cm}\includegraphics[scale=.83]{figs/algorithm} \\[0.2cm]
+\caption{
+Pseudocode of a simplified version of linear-time partition function calculation algorithm.
+% as well as a beam prune algorithm. 
+% Here we model hash tables following Python dictionaries, where $(i, j) \in C$ checks whether the key $(i, j)$ is in the hash $C$; 
+% this is needed to ensure linear runtime. 
+% Quick select algotithm is used in beam prune, 
+% and we skip the details for quick select here since it is well known.
+% Real \linearpartition system is much more involved, but the pseudocode illustrates the left-to-right partition function calculation idea using a Nussinov-like fashion.
+For the detailed \linearpartition algorithm using the Turner model, please refer to our open source code.
+See Figure~\ref{beam_prune_alg} for pseudocode of BEAMPRUNE procedure.
+\label{algorithm}}
+\vspace{-0.3cm}
+% \end{figure*}
+\end{figure}
+
+Define ${\mathbf x}$ as the input RNA sequence and $\mathcal{Y(\mathbf x)}$ as the set of all possible secondary structures of $\mathbf{x}$. $\mathbf{y}$ is a secondary structure 
+% of $\mathbf{x}$ 
+in $\mathcal{Y(\mathbf x)}$. 
+The partition function $Q$ of $\mathbf{x}$ is defined as:
+
+\begin{equation}
+	Q=\sum_{\mathbf{y} \in \mathcal{Y(\mathbf x)}} e^{-\frac{\Delta G({\mathbf{y}})}{kT}}
+\end{equation}
+where $\Delta G({\mathbf{y}})$ is the  conformational Gibb’s free energy change of $\mathbf{y}$, $k$ is the Boltzmann constant and $T$ is the thermodynamic temperature.
+
+$\Delta G({\mathbf{y}})$ is calculated using loop-based "Turner" free-energy model~\cite{mathews+:1999, Mathews+:2004}, 
+but for simplicity in presenting the algorithm we adopt revised Nussinov-Jacobson energy model, 
+i.e., a free energy change of $\delta(\mathbf{x}, j)$ for unpaired base at position $j$ 
+and a free energy change of $\xi(\mathbf{x}, i, j)$ for base pair of $(i,j)$.
+For example, we can assign $\delta(\mathbf{x}, j)=1$ kcal/mol and $\xi(\mathbf{x}, i, j)=-3$ kcal/mol for CG pair, and $\xi(\mathbf{x}, i, j)=-2$ kcal/mol for AU and GU pairs. 
+Thus, $\Delta G({\mathbf{y}})$
+can be decomposed as:
+
+\begin{equation}
+	\Delta G({\mathbf{y}}) = \sum_{j \in {\textrm {unpaired}}(\mathbf{y})} \delta(\mathbf{x}, j) \ + \sum_{(i,j) \in {\textrm{paired}}(\mathbf{y})} \xi(\mathbf{x}, i, j)
+\end{equation}
+where ${\textrm {unpaired}}(\mathbf{y})$ is the set of unpaired bases in $\mathbf{y}$, 
+and ${\textrm {paired}}(\mathbf{y})$ is the set of pairs in $\mathbf{y}$.
+% and $y_j$ denotes the position $j$ of $\mathbf{y}$.
+
+With the simplified model, the partition function $Q$ of $\mathbf{x}$ is:
+
+\begin{equation}
+	Q=\sum_{\mathbf{y} \in \mathcal{Y(\mathbf x)}} (\prod_{j \in {\textrm {unpaired}}(\mathbf{y})} e^{-\frac{\delta(\mathbf{x}, j)}{kT}} \prod_{(i,j) \in {\textrm{paired}}(\mathbf{y})} e^{-\frac{\xi(\mathbf{x}, i, j)}{kT}})
+\end{equation}
+
+
+We provide the pseudocode of our simplified linear-time partition function algorithm (based on the revised Nussinov-Jacobson energy model) in Figure~\ref{algorithm},
+illustrating how our algorithm linearizes partition function calculation. 
+
+% \linearpartition scans from 5'-end to 3'-end (left-to-right), 
+% calculating $Q_{0,j}$, which is the partition function from 5'-end to current step $j$.
+In order to define our algorithm, first we define a state as: 
+
+\begin{center}
+$\langle i,j \rangle : Q(i,j)$
+\end{center}
+where $i$ and $j$ are start and end points of span $[i,j]$, %is the index of an openning bracket, 
+% $j$ is the index of current step, 
+and $Q(i,j)$ is the partition function of span $[i,j]$. %state $\langle i,j \rangle$. 
+% We require each state $\langle i,j \rangle$ only has at most one openning bracket at $i$.
+Each state of $\langle i,j \rangle : Q(i,j)$ represents the partition function of possible substructures in span $[i,j]$.
+We require these substructures have at most one openning bracket at $i$.
+For example, ``\bml\md\md'', ``\bml\bml\bmr'' and ``\md\md\md'' are valid states, 
+while ``\bml\bml\md'' and ``\md\bml\md'' are invalid.
+
+We use a hash $Q$, mapping from the key $(i,j)$ to its partition function $Q(i,j)$, 
+to store and look up states.   
+$\langle 0,1 \rangle:1.0$ represents the dummy head state, 
+whose partition function $Q(0,1)$ is initialized with value $1.0$.
+This represents a structure with no pairs, 
+i.e., the random coil, 
+which is the reference state (free energy change of zero) and thus has equilibrium constant of 1.  ?????? (added by Mathews, but state <0,1>:1 is not the coil)
+\linearpartition scans from 5'-end to 3'-end (left-to-right).
+At each step $j$ between 1 and $n$ (the length of the sequence), 
+% state $\langle 0,j+1 \rangle$ can always be extended with ``\md'' from state $\langle 0,j \rangle$.
+% with its 
+% Then we define three actions, PUSH, SKIP and POP
+% to search states $\langle \cdot,j+1 \rangle$:
+three actions, PUSH, SKIP and POP, are called:
+% similar as in \linearfold but different 
+
+\begin{itemize}
+\item PUSH: create a new state $\langle j,j+1 \rangle:Q(j,j+1)$ representing an opening bracket at $j$,
+whose partition function $Q(j,j+1)=1.0$: 
+
+	\begin{equation*}
+		\frac{\langle i,j \rangle : Q(i,j)}{\langle j,j+1 \rangle : 1.0}
+	\end{equation*}
+
+\item SKIP: extend state $\langle i,j \rangle:Q(i,j)$ to state $\langle i,j+1 \rangle:Q(i,j+1)$ 
+by adding ``\md'' on the right,
+where $Q(i,j+1)=Q(i,j) \cdot e^{-\frac{\delta(\mathbf{x}, j)}{kT}}$:
+
+	\begin{equation*}
+		\frac{\langle i,j \rangle : Q(i,j)}{\langle i,j+1 \rangle : Q(i,j) \cdot e^{-\frac{\delta(\mathbf{x}, j)}{kT}}}
+	\end{equation*}
+
+\item POP: when $(x_i, x_j)$ is allowed to be paired, 
+combine state $\langle i,j \rangle:Q(i,j)$ 
+with its each previous state $\langle k,i \rangle:Q(k,i)$,
+and create a new state $\langle k,j+1 \rangle:Q(k,i+1)$,
+where $Q(k,j+1)=Q(k,i) \cdot Q(i,j) \cdot e^{-\frac{\xi(\mathbf{x}, i, j)}{kT}}$:
+
+	\begin{equation*}
+		\frac{\langle k,i \rangle : Q(k,i) \ \ \ \ \ \langle i,j \rangle : Q(i,j)}{\langle k,j+1 \rangle : Q(k,i) \cdot Q(i,j) \cdot e^{-\frac{\xi(\mathbf{x}, i, j)}{kT}}}
+	\end{equation*}
+
+Note that the operator of updating $Q(k,j+1)$ is "+=" (see Figure~\ref{algorithm} line 11).
+
+% \item COMBINE: for each close state $\langle i,j \rangle$, it can be combined with its prefix state $\langle 0,i \rangle$ and form state $\langle 0,j+1 \rangle$:
+% 	\begin{equation*}
+% 		\frac{\langle 0,i \rangle : Q_{0,i} \ \ \langle i,j \rangle : Q_{i,j}}{\langle 0,j+1 \rangle : Q_{0,i} \cdot Q_{i,j} \cdot e^{-\frac{\xi(\mathbf{x}, i, j)}{kT}}}
+% 	\end{equation*}
+\end{itemize}
+
+
+
+% beam prune
+Figure~\ref{algorithm} shows that \linearpartition algorithm has three loops, 
+one for $j$, one for $i$, and one for $k$,
+and in each loop it at most traverses $n$ elements (i.e., $k,i$ and $j$ are all bounded by $n$).
+Without approximation, the search space is $O(n^3)$ as classic partition function algorithm,
+but in a left-to-right dynamic programming fashion instead of bottom-up.
+This left-to-right fashion allows to further apply beam pruning,
+a heuristic algorithm,
+to narrow down the search space.
+% and achive linear runtime.
+The main idea is to only keep the top $b$ promising candidates 
+(in our case the states %$(i,j)$
+with higher partition function), %value $Q_{i,j}$, 
+and remove other less important ones.
+% We adopt quick select algorithm to ensure the process of selecting top $b$  candidates costs linear runtime.
+With beam pruning, 
+we reduce the number of states $\langle \cdot, j \rangle:Q(\cdot,j)$ to at most $b$,
+thus reducing the runtime from $O(n^3)$ to $O(nb^2)$, 
+where $b$ is the beam size, 
+a user adjustable constant
+(100 by default).
+
+
+
+% \usepackage{algpseudocode}
+
+% \newcommand{\pluseq}{\mathrel{+}=}
+% \let\oldReturn\Return
+% \renewcommand{\Return}{\State\oldReturn}
+
+% % \begin{document}
+
+% % LinearPartition Algorithm: Simplified Version
+% \begin{algorithmic}[1]
+
+% \Function{LinearPartition}{$\mathbf x$}
+%     \State $n \leftarrow$ length of $\mathbf x$
+%     \State $C \leftarrow$ hash() \Comment{chart}
+%     \State $C(0,1) \leftarrow 1$ \Comment{axiom} 
+%     \For{$j=1,...n$}
+%         \State $C(0,j+1) \leftarrow C(0,j) \cdot e^{-\frac{\delta(\mathbf{x},j)}{kT}} $ %\Comment{Initialize}
+%         \State $C(j,j+1) \leftarrow 1$ \Comment{action PUSH} % 1 = e{-(0/kT)}
+%         % \State $C(0,j+1) \leftarrow C(0,j)$ \Comment{Initialize}
+%         \ForAll{$(i,j) \in C$}
+%             \State $C(i,j+1) \leftarrow C(i,j) \cdot e^{-\frac{\delta(\mathbf{x},j)}{kT}} $ \Comment{action SKIP}
+%             \If{$(\mathbf{x_i},\mathbf{x_j})\in $\{AU, UA, CG, GC, GU, UG\}} 
+%                 \ForAll{$(k,i) \in C $}
+%                     \State $C(k,j+1) \pluseq {C(k,i) \cdot C(i,j) \cdot e^{-\frac{\xi(\mathbf{x},i,j)}{kT}}} $ \Comment{action POP}
+%                     % \State $C(0,j+1) \pluseq {C(0,k) \cdot C(k,j+1) \cdot e^{-\frac{\xi(\mathbf{x},i,j)}{kT}}} $
+%             \EndFor
+%             \EndIf
+%             \State $C(0,j+1) \pluseq C(0,i) \cdot C(i,j+1) $
+%         \EndFor
+%         \State BEAMPRUNE($C,j+1,$beamsize)
+%     \EndFor
+%     \Return $C(0,n+1)$
+% \EndFunction
+% \\
+
+% \Function{beamprune}{$C, j, b$}
+%     \State $cands \leftarrow$ hash() \Comment{candidates}
+%     \ForAll{$(i,j) \in C$}
+%         \State $cands(i) \leftarrow C(0,i) \cdot C(i,j)$ \Comment{$C(0,i) $ as prefix score}
+%     \EndFor
+%     \State $cands \leftarrow$ QuickSelectTopB($cands, b$) \Comment{use quick select algorithm to select top-b by score}
+%     \ForAll{$(i,j) \in C$}
+%         \If{$i \notin$ cands}
+%             \State delete $(i,j)$ in $C$ \Comment{prune out low-scoring states}
+%         \EndIf
+%     \EndFor
+% \EndFunction
+
+% \end{algorithmic}
+% \end{algorithm}
+
+% \end{document}

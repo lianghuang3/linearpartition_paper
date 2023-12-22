@@ -3,9 +3,11 @@
 %%%     author          = "Russell Standish"
 %%%  }
 %%% ====================================================================
-% This is "pnas2016.bst", adapted from 
-% "pnas2011.bst" "pnas2009.bst" and "pnas.bst", 
+% This is "pnas-new.bst", adapted from
+% "pnas2016.bst", "pnas2011.bst" "pnas2009.bst" and "pnas.bst",
 % modified from "unsrt.bst"
+% April 2019: Bold article volume numbers, ignore issue numbers, move publication year to end, abbreviate journal names.
+% August 2021: Issue warning if an @article is missing the volume field.
 % BibTeX standard bibliography style `unsrt'
 	% version 0.99a for BibTeX versions 0.99a or later, LaTeX version 2.09.
 	% Copyright (C) 1985, all rights reserved.
@@ -41,6 +43,8 @@ ENTRY
     type
     volume
     year
+    url
+    doi
   }
   {}
   { label }
@@ -94,6 +98,28 @@ FUNCTION {output.check}
   if$
 }
 
+FUNCTION {new.block}
+{ output.state before.all =
+    'skip$
+    { after.block 'output.state := }
+  if$
+}
+
+
+FUNCTION {format.url}
+{ url empty$
+    { "" }
+    { new.block "URL \url{" url * "}" * }
+  if$
+}
+
+FUNCTION {format.doi}
+{ doi empty$
+    { "" }
+    { new.block "\doi{" doi * "}" * }
+  if$
+}
+
 FUNCTION {output.bibitem}
 { newline$
   "\bibitem{" write$
@@ -110,12 +136,6 @@ FUNCTION {fin.entry}
   newline$
 }
 
-FUNCTION {new.block}
-{ output.state before.all =
-    'skip$
-    { after.block 'output.state := }
-  if$
-}
 
 FUNCTION {new.sentence}
 { output.state after.block =
@@ -214,7 +234,8 @@ FUNCTION {format.names}
   s num.names$ 'numnames :=
   numnames 'namesleft :=
     { namesleft #0 > }
-    { s nameptr "{vv~}{ll}{, jj}{ f{}}" format.name$ 't :=
+%    { s nameptr "{vv~}{ll}{, jj}{ f{}}"
+    { s nameptr "{f{} }{vv~}{ll}{, jj}" format.name$ 't :=
       nameptr #1 >
 	{ namesleft #1 >
 	    { ", " * t * }
@@ -305,6 +326,19 @@ FUNCTION {format.editors}
 FUNCTION {format.title}
 { title "t" change.case$
 }
+
+FUNCTION {enquote}
+{ duplicate$ empty$
+    {pop$ "" }
+    {"``" swap$ * ",''" * }
+    if$
+}
+
+FUNCTION {format.atitle}
+{ title enquote
+}
+
+
 
 FUNCTION {n.dashify}
 { 't :=
@@ -444,22 +478,29 @@ FUNCTION {format.pages}
   if$
 }
 
+%%% April 2019: bold volume, ignore issue
 FUNCTION {format.vol.num.pages}
-{ volume field.or.null
-  number empty$
-  {
-    issue empty$
-    'skip$
-    { "(" issue * ")" * * }
-    if$
-  }
-  {
-    "(" number * ")" * *
-      volume empty$
-	    { "there's a number but no volume in " cite$ * warning$ }
-	    'skip$
-      if$
-  }
+{  %volume field.or.null
+%  number empty$
+%  {
+%    issue empty$
+%    'skip$
+%    { "(" issue * ")" * * }
+%    if$
+%  }
+%  {
+%    "(" number * ")" * *
+%      volume empty$
+%	    { "there's a number but no volume in " cite$ * warning$ }
+%	    'skip$
+%      if$
+%  }
+%  if$
+  %%% August 2021: display warning if volume is missing, instead of erroring out about empty stack
+  volume empty$
+  % 'skip$
+  { "empty volume in " cite$ * warning$ ""}
+  { "\textbf{" volume field.or.null * "}" * }
   if$
   pages empty$
   {
@@ -468,7 +509,8 @@ FUNCTION {format.vol.num.pages}
 	  {
       duplicate$ empty$
 	    { pop$ format.pages }
-	    { ":" * eid n.dashify * }
+%	    { ":" * eid n.dashify * }
+        { ", " * eid n.dashify * }
       if$
     }
     if$
@@ -476,7 +518,8 @@ FUNCTION {format.vol.num.pages}
   {
     duplicate$ empty$
 	  { pop$ format.pages }
-	  { ":" * pages n.dashify * }
+%	  { ":" * pages n.dashify * }
+      { ", " * pages n.dashify * }
     if$
   }
   if$
@@ -532,6 +575,20 @@ FUNCTION {format.thesis.type}
   if$
 }
 
+FUNCTION {format.address.thesis}
+    { address empty$
+      { "" }
+      {", " * address }
+      if$
+    }
+
+FUNCTION {format.school.thesis}
+    { school empty$
+      { "" }
+      {", " * school }
+      if$
+    }
+
 FUNCTION {format.tr.number}
 { type empty$
     { "Technical Report" }
@@ -543,6 +600,11 @@ FUNCTION {format.tr.number}
   if$
 }
 
+FUNCTION {format.journal}
+{
+  "{\em\protect\JournalTitle{" journal * "}}" *
+}
+
 FUNCTION {format.article.crossref}
 { key empty$
     { journal empty$
@@ -550,7 +612,8 @@ FUNCTION {format.article.crossref}
 	  warning$
 	  ""
 	}
-	{ "In {\em " journal * "\/}" * }
+%	{ "In {\em " journal * "\/}" * }
+    { "In " format.journal * "\/" * }
       if$
     }
     { "In " key * }
@@ -625,21 +688,27 @@ FUNCTION {format.incoll.inproc.crossref}
   " \cite{" * crossref * "}" *
 }
 
+
+
 FUNCTION {article}
 { output.bibitem
   format.authors "author" output.check
-  format.date "year" output.check
+  new.sentence
+%  format.date "year" output.check
   format.title "title" output.check
   new.block
   crossref missing$
-    { journal emphasize "journal" output.check
+    % April 2019: abbreviate journal names
+    { %journal emphasize "journal" output.check
+      format.journal "journal" output.check
       format.vol.num.pages output
     }
     { format.article.crossref output.nonnull
       format.pages output
     }
   if$
-  new.block
+  %new.block
+  format.date "year" output.check
   note output
   fin.entry
 }
@@ -651,7 +720,8 @@ FUNCTION {book}
     { "author and editor" editor either.or.check }
     'skip$
   if$
-  format.date "year" output.check
+  new.sentence
+%  format.date "year" output.check
   format.btitle.series "title" output.check
   crossref missing$
     { format.editors output
@@ -667,7 +737,8 @@ FUNCTION {book}
   format.edition output
   new.sentence
   format.pages output
-  new.block
+  %new.block
+  format.date "year" output.check
   note output
   fin.entry
 }
@@ -675,10 +746,12 @@ FUNCTION {book}
 FUNCTION {booklet}
 { output.bibitem
   format.authors output
-  format.date output
+  new.sentence
+% format.date output
   format.title "title" output.check
   howpublished address comma.connect parenthesize output
-  new.block
+  %new.block
+  format.date output
   note output
   fin.entry
 }
@@ -686,7 +759,8 @@ FUNCTION {booklet}
 FUNCTION {inbook}
 { output.bibitem
   format.authors output.nonnull
-  format.date "year" output.check
+  new.sentence
+%  format.date "year" output.check
   format.btitle.series "title" output.check
   new.sentence
   crossref missing$
@@ -704,7 +778,8 @@ FUNCTION {inbook}
   format.edition output
   new.sentence
   format.pages output
-  new.block
+  %new.block
+  format.date "year" output.check
   note output
   fin.entry
 }
@@ -712,7 +787,8 @@ FUNCTION {inbook}
 FUNCTION {incollection}
 { output.bibitem
   format.authors "author" output.check
-  format.date "year" output.check
+  new.sentence
+%  format.date "year" output.check
   format.title "title" output.check
   format.in.ed.booktitle "title" output.check
   new.sentence
@@ -730,7 +806,8 @@ FUNCTION {incollection}
   format.edition output
   new.sentence
   format.pages output
-  new.block
+%  new.block
+  format.date "year" output.check
   note output
   fin.entry
 }
@@ -738,7 +815,8 @@ FUNCTION {incollection}
 FUNCTION {inproceedings}
 { output.bibitem
   format.authors "author" output.check
-  format.date "year" output.check
+  new.sentence
+%  format.date "year" output.check
   format.title "title" output.check
   format.in.ed.booktitle "title" output.check
   new.sentence
@@ -758,7 +836,8 @@ FUNCTION {inproceedings}
   format.edition output
   new.sentence
   format.pages output
-  new.block
+  %new.block
+  format.date "year" output.check
   note output
   fin.entry
 }
@@ -775,7 +854,8 @@ FUNCTION {manual}
     }
     { format.authors output.nonnull }
   if$
-  format.date "year" output.check
+  new.sentence
+%  format.date "year" output.check
   format.btitle.series "title" output.check
   author empty$
     { ""  }
@@ -784,7 +864,8 @@ FUNCTION {manual}
   publisher comma.connect address comma.connect parenthesize output
   new.sentence
   format.edition output
-  new.block
+  %new.block
+  format.date "year" output.check
   note output
   fin.entry
 }
@@ -792,9 +873,15 @@ FUNCTION {manual}
 FUNCTION {mastersthesis}
 { output.bibitem
   format.authors "author" output.check
+  new.sentence
+format.atitle "title" output.check
+  "M.Sc. thesis" format.thesis.type output.nonnull
+  format.school.thesis output
+  format.address.thesis output
   format.date "year" output.check
-  "Master's thesis" format.thesis.type output.nonnull
-  school address comma.connect parenthesize output
+  new.block
+  format.doi output
+  format.url output
   new.block
   note output
   fin.entry
@@ -803,10 +890,12 @@ FUNCTION {mastersthesis}
 FUNCTION {misc}
 { output.bibitem
   format.authors output
-  format.date output
+  new.sentence
+%  format.date output
   format.title output
   howpublished parenthesize output
-  new.block
+  %new.block
+  format.date output
   note output
   fin.entry
   empty.misc.check
@@ -815,25 +904,34 @@ FUNCTION {misc}
 FUNCTION {phdthesis}
 { output.bibitem
   format.authors "author" output.check
+  new.sentence
+format.atitle "title" output.check
+  "PhD thesis" format.thesis.type output.nonnull
+  format.school.thesis output
+  format.address.thesis output
   format.date "year" output.check
-  "Ph.D. thesis" format.thesis.type output.nonnull
-  school address comma.connect parenthesize output
+  new.block
+  format.doi output
+  format.url output
   new.block
   note output
   fin.entry
 }
 
+
 FUNCTION {proceedings}
 { output.bibitem
   format.editors.as.authors output
-  format.date output
+  new.sentence
+%  format.date output
   format.btitle.series "title" output.check
   organization publisher comma.connect
   address comma.connect parenthesize output
   format.bvolume.number output
   new.sentence
   format.pages output
-  new.block
+%  new.block
+  format.date output
   note output
   fin.entry
 }
@@ -841,24 +939,27 @@ FUNCTION {proceedings}
 FUNCTION {techreport}
 { output.bibitem
   format.authors "author" output.check
-  format.date output
+  new.sentence
+%  format.date output
   format.title "title" output.check
   new.sentence
   institution address comma.connect parenthesize output
   new.sentence
   format.tr.number output.nonnull
-  new.block
-  note output
+%  new.block
+  format.date output
   fin.entry
 }
 
 FUNCTION {unpublished}
 { output.bibitem
   format.authors "author" output.check
-  format.date output
+  new.sentence
+%  format.date output
   format.title "title" output.check
   new.block
   note "note" output.check
+  format.date output
   fin.entry
 }
 

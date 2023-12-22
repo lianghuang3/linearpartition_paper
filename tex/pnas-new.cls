@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% pnas-new.cls, v1.42, 2017/07/03
+% pnas-new.cls, v1.45, 2019/04/29
 %
 % This class file enables authors to prepare research 
 % articles for submission to PNAS.
@@ -23,7 +23,7 @@
 % to produce the PDF, not dvis -> ps -> pdf nor dvipdf
 % 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{pnas-new}[03/07/2017, v1.42]
+\ProvidesClass{pnas-new}[2019/04/29, v1.45]
 \AtEndOfClass{\RequirePackage{microtype}}
 % Option for line numbers
 \newif\if@pnaslineno
@@ -54,28 +54,30 @@
 \RequirePackage{tikz}
 \RequirePackage[framemethod=tikz]{mdframed}
 
-%% For single column equations and balancing the columns on final page
-\RequirePackage{widetext}
+%% Hyperlinking
+\RequirePackage[colorlinks=true, allcolors=blue, urlcolor=blue]{hyperref}
 
 %% Set up main title page fonts 
 \newcommand{\headerfont}{\normalfont\sffamily\fontsize{7}{9} \selectfont}
 \newcommand{\footerfont}{\normalfont\sffamily\fontsize{7}{9} \selectfont}
-\newcommand{\titlefont}{\fontfamily{lmss}\bfseries\fontsize{19.5pt}{24pt}\selectfont} %22 24
+\newcommand{\titlefont}{\fontfamily{lmss}\bfseries\fontsize{22pt}{24pt}\selectfont}
 \newcommand{\dropcapfont}{\fontfamily{lmss}\bfseries\fontsize{26pt}{28pt}\selectfont}
 \newcommand{\datesfont}{\normalfont\sffamily\fontsize{7}{8}\selectfont}
-\newcommand{\absfont}{\normalfont\sffamily\bfseries\fontsize{9}{12}\selectfont}
+\newcommand{\absfont}{\normalfont\sffamily\bfseries\fontsize{8}{11}\selectfont}
 \newcommand{\keywordsfont}{\normalfont\rmfamily\fontsize{7}{10}\selectfont}
 \newcommand{\copyrightfont}{\normalfont\rmfamily\fontsize{6}{8}\selectfont}
 
+%% Set URL link color & font
+\renewcommand\UrlFont{\color{black}\sffamily}
 
 %% Author and affiliation
 \RequirePackage{authblk}
 \setlength{\affilsep}{8.5pt} % 16.5pts between base of author line and base of affil line
 \renewcommand\Authfont{\color{color0}\normalfont\sffamily\bfseries\fontsize{9}{11}\selectfont}
 \renewcommand\Affilfont{\color{color0}\normalfont\sffamily\fontsize{7}{8}\selectfont}
-\makeatletter
+
 \renewcommand\AB@affilsepx{; \protect\Affilfont}
-\makeatother
+
 \renewcommand\Authands{, and }
 
 %% Choose template type
@@ -91,13 +93,16 @@
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 
 %% Watermark 
-\usepackage[printwatermark]{xwatermark}
 \newboolean{displaywatermark}
-\setboolean{displaywatermark}{false} % Set to false to remove the watermark %%
-                                % Dezhong: set to false
+\setboolean{displaywatermark}{false} % Set to false to remove the watermark
 \AtBeginDocument{%
   \ifthenelse{\boolean{displaywatermark}}{%
-  \newwatermark[allpages,color=gray!20,angle=45,scale=3,xpos=0,ypos=0]{DRAFT}}{}
+  \RequirePackage{draftwatermark}
+  \SetWatermarkAngle{45}
+  \SetWatermarkColor{gray!20}
+  \SetWatermarkFontSize{3cm}
+  \SetWatermarkText{{\fontfamily{bch}\bfseries DRAFT}}
+}{}
 }
 
 %% Copyright statement (not used)
@@ -124,7 +129,8 @@
                 bottom=32pt,%
                 headheight=0pt,% No Header
                 headsep=10pt,%
-                footskip=25pt]{geometry}
+                footskip=25pt,
+                marginparwidth=38pt]{geometry}
 \RequirePackage[labelfont={bf,sf},%
                 labelsep=period,%
                 figurename=Fig.]{caption}
@@ -148,18 +154,10 @@
 %% If not, try to use pnas2011.bst instead
 %% If both aren't available, fall back to
 %% unsrtnat
-
-%\usepackage[superscript,biblabel]{cite} % conflicts with hyperref, but automatically places numeric cite after puncs
-\RequirePackage[colorlinks=true, linkcolor=blue, urlcolor=blue, anchorcolor=blue, citecolor=blue] {hyperref}
-%\usepackage{urcsbiblio}
-
 \RequirePackage[numbers,sort&compress,merge,round]{natbib}
-\setcitestyle{super,open={},close={}} % no ( ) around superscript citations
-
 \setlength{\bibsep}{0.0pt}
 \IfFileExists{pnas-new.bst}{
   \bibliographystyle{pnas-new}
-  % \bibliographystyle{elsarticle-harv} % hzhang
 }{
   \IfFileExists{pnas2011.bst}{
     \bibliographystyle{pnas2011}
@@ -170,22 +168,23 @@
   }
 }
 \renewcommand{\bibsection}{} % Remove header
-\renewcommand\bibfont{\normalfont\sffamily\fontsize{7.7}{9.2}\selectfont} % set font to be sans serif
-
-\makeatletter 
+\renewcommand\bibfont{\normalfont\sffamily\fontsize{6}{8}\selectfont} % set font to be sans serif
+%% April 29, 2019: abbreviate journal names
+\RequirePackage{jabbrv}
+ 
 \renewcommand\@biblabel[1]{ #1.} % Remove brackets from label
 \def\tagform@#1{\maketag@@@{\bfseries(\ignorespaces#1\unskip\@@italiccorr)}}
 \renewcommand{\eqref}[1]{\textup{{\normalfont Eq.~(\ref{#1}}\normalfont)}}
-\makeatother
+
 
 %% Figure caption style
-\DeclareCaptionFormat{pnasformat}{\normalfont\sffamily\fontsize{8}{11}\selectfont#1#2#3}%lhuang: was 7/9
+\DeclareCaptionFormat{pnasformat}{\normalfont\sffamily\fontsize{7}{9}\selectfont#1#2#3}
 \captionsetup*{format=pnasformat}
 
 %% Table style
 \RequirePackage{etoolbox}
-%\captionsetup*[table]{labelfont+={small},textfont+={small,sf,bf},skip=10pt,position=above} 
-\captionsetup*[table]{format=pnasformat} % lhuang %{labelfont+={small},textfont+={small,sf},skip=10pt,position=above} % lhuang: bf in caption
+\captionsetup*[table]{labelfont+={small},textfont+={small,sf,bf},skip=10pt,position=above}
+
 % booktabs provide nice spacing, but rule widths and distances need fixing
 \setlength{\heavyrulewidth}{0.5pt}
 \setlength{\lightrulewidth}{0.5pt}
@@ -193,38 +192,25 @@
 \setlength{\belowrulesep}{1.5pt}
 \setlength{\belowbottomsep}{10pt}
 \AtBeginEnvironment{tabular}{
-\sffamily\fontsize{7.7}{10}\selectfont %lhuang
+\sffamily\fontsize{7.5}{10}\selectfont
 }
 \newcommand{\addtabletext}[1]{{\setlength{\leftskip}{9pt}\fontsize{7}{9}\selectfont#1}}
 
 %% Equation numbering - use square brackets
-\makeatletter
+
 \renewcommand\tagform@[1]{\maketag@@@ {[\ignorespaces #1\unskip \@@italiccorr ]}}
-\makeatother
+
 
 %% Headers and footers
 \RequirePackage{fancyhdr}  % custom headers/footers
 \RequirePackage{lastpage}  % Number of pages in the document
 \pagestyle{fancy}          % Enables the custom headers/footers
 
-%% For the line numbers overlay
-\def\leftlinenos{%
-  \pgfmathtruncatemacro{\leftstartlineno}{2*(\thepage - 1)*62 + 1}%
-  \pgfmathtruncatemacro{\leftendlineno}{(2*(\thepage - 1) + 1)*62}%
-  \foreach \x in {\leftstartlineno,...,\leftendlineno}{\noindent\x\\}%
-}
-\def\rightlinenos{%
-  \pgfmathtruncatemacro{\rightstartlineno}{(2*(\thepage - 1) + 1)*62 + 1}%
-  \pgfmathtruncatemacro{\rightendlineno}{(2*\thepage)*62}%
-  \foreach \x in {\rightstartlineno,...,\rightendlineno}{\noindent\x\\}%
-}
-
-\makeatletter
 \fancypagestyle{firststyle}{
-   % \fancyfoot[R]{\footerfont PNAS\hspace{7pt}|\hspace{7pt}\textbf{\today}\hspace{7pt}|\hspace{7pt}vol. XXX\hspace{7pt}|\hspace{7pt}no. XX\hspace{7pt}|\hspace{7pt}\textbf{\thepage\textendash\pageref{LastPage}}}
+   \fancyfoot[R]{\footerfont PNAS\hspace{7pt}|\hspace{7pt}\textbf{\today}\hspace{7pt}|\hspace{7pt}vol. XXX\hspace{7pt}|\hspace{7pt}no. XX\hspace{7pt}|\hspace{7pt}\textbf{\thepage\textendash\pageref{LastPage}}}
    \fancyfoot[L]{\footerfont\@ifundefined{@doi}{}{\@doi}}
 }
-\makeatother
+
 
 % Headers
 \fancyhead[LE,RO]{}
@@ -233,35 +219,10 @@
 \lfoot{}%
 \cfoot{}%
 \rfoot{}%
-\makeatletter
-%\fancyfoot[LE]{\footerfont\textbf{\thepage}\hspace{7pt}|\hspace{7pt}\@ifundefined{@doi}{}{\@doi}}
-% \fancyfoot[RO]{\footerfont PNAS\hspace{7pt}|\hspace{7pt}\textbf{\today}\hspace{7pt}|\hspace{7pt}vol. XXX\hspace{7pt}|\hspace{7pt}no. XX\hspace{7pt}|\hspace{7pt}\textbf{\thepage}}
-%\fancyfoot[RE,LO]{\footerfont\@ifundefined{@leadauthor}{}{\@leadauthor}\ifnum \value{authors} > 1\hspace{5pt}\textit{et al.}\fi}
-%\fancyfoot[R]{\ifthenelse{\value{page}=1}{\footerfont \textit{(includes Supplementary Information)}}{}}
 
-%% \ifnum\thepage=1
-%% \fancyfoot[R]{\footerfont (includes Supplementary Information)}
-%% \else
-%% \fancyfoot[R]{}
-%% \fi
-
-
-% Use footer routine for line numbers
-\AtBeginDocument{
-  \if@pnaslineno
-    \ifthenelse{\boolean{singlecolumn}}{
-      % use lineno package if singlecolumn
-      \RequirePackage{lineno}
-      \linenumbers
-    }{% use tikz if twocolumn
-    \fancyfoot[C]{\begin{tikzpicture}[remember picture,overlay]
-    \node at([xshift=1.5em,yshift=\dimexpr -0.0625in-53pt] current page.north west)[anchor=north west,text width=3em,font=\rmfamily,align=right] {\leftlinenos};%
-    \node at([xshift=-1.5em,yshift=\dimexpr -0.0625in-53pt] current page.north east)[anchor=north east,text width=3em,font=\rmfamily,align=left] {\rightlinenos};%
-    \end{tikzpicture}}
-    }
-  \fi
-}
-\makeatother
+\fancyfoot[LE]{\footerfont\textbf{\thepage}\hspace{7pt}|\hspace{7pt}\@ifundefined{@doi}{}{\@doi}}
+\fancyfoot[RO]{\footerfont PNAS\hspace{7pt}|\hspace{7pt}\textbf{\today}\hspace{7pt}|\hspace{7pt}vol. XXX\hspace{7pt}|\hspace{7pt}no. XX\hspace{7pt}|\hspace{7pt}\textbf{\thepage}}
+\fancyfoot[RE,LO]{\footerfont\@ifundefined{@leadauthor}{}{\@leadauthor}\ifnum \value{authors} > 1\hspace{5pt}\textit{et al.}\fi}
 
 \renewcommand{\headrulewidth}{0pt}% % No header rule
 \renewcommand{\footrulewidth}{0pt}% % No footer rule
@@ -310,7 +271,7 @@
 \newcommand{\dates}[1]{\def\@dates{#1}}
 \newcommand{\doi}[1]{\def\@doi{#1}}
 \newcommand{\leadauthor}[1]{\def\@leadauthor{#1}}
-\newcommand{\etal}[1]{\def\@etal{#1}}
+% \newcommand{\etal}[1]{\def\@etal{#1}}
 \newcommand{\keywords}[1]{\def\@keywords{#1}}
 \newcommand{\authorcontributions}[1]{\def\@authorcontributions{#1}}
 \newcommand{\authordeclaration}[1]{\def\@authordeclaration{#1}}
@@ -338,18 +299,16 @@ THE ABSTRACT\vskip12pt}\let\go\relax\fi
 % Define an environment with abstract content and styling
 \newcommand{\abscontent}{
 \noindent
-{%
 \parbox{\dimexpr\linewidth}{%
     \vskip3pt%
 	\absfont \theabstract
 }%
-}%
 \vskip10pt%
 \noindent
-{\parbox{\dimexpr\linewidth}{%
+\parbox{\dimexpr\linewidth}{%
 {
  \keywordsfont \@ifundefined{@keywords}{}{\@keywords}}%
-}}%
+}
 \vskip12pt%
 }
 
@@ -366,33 +325,54 @@ THE ABSTRACT\vskip12pt}\let\go\relax\fi
 \renewcommand{\@maketitle}{%
 {%
 \ifthenelse{\boolean{shortarticle}}
-{\ifthenelse{\boolean{singlecolumn}}{}{
-{\raggedright\baselineskip= 24pt\titlefont \@title\par}%
-\vskip10pt% 21pts between base of title and base of author line
-{\raggedright \@author\par}
-\vskip8pt% 16pts between base of affiliations and base of dates line 
-{\raggedright \datesfont \@ifundefined{@dates}{}{\@dates}\par}
-\vskip12pt%
-}}
-{% else
-%
-\vskip10pt%
-{\raggedright\baselineskip= 24pt\titlefont \@title\par}%
-\vskip10pt% 21pts between base of title and base of author line
-{\raggedright \@author\par}
-\vskip8pt% 16pts between base of affiliations and base of dates line 
-{\raggedright \datesfont \@ifundefined{@dates}{}{\@dates}\par}
-\vskip12pt
-{%
-\abscontent
-}%
-\vskip25pt%
-}%
+  {\ifthenelse{\boolean{singlecolumn}}{}{
+    {\raggedright\baselineskip= 24pt\titlefont \@title\par}%
+    \vskip10pt% 21pts between base of title and base of author line
+    {\raggedright \@author\par}
+    \vskip8pt% 16pts between base of affiliations and base of dates line 
+    {\raggedright \datesfont \@ifundefined{@dates}{}{\@dates}\par}
+    \vskip12pt%
+    }}
+  {% else
+    %
+    \vskip10pt%
+    {\raggedright\baselineskip= 24pt\titlefont \@title\par}%
+    \vskip10pt% 21pts between base of title and base of author line
+    {\raggedright \@author\par}
+    \vskip8pt% 16pts between base of affiliations and base of dates line 
+    {\raggedright \datesfont \@ifundefined{@dates}{}{\@dates}\par}
+    \vskip12pt
+    {%
+    \abscontent
+    }%
+    \vskip25pt%
+  }%
 %%%
 \@additionalelement
 }%
 \vskip\pnas@vertadjust
-}%
+}
+
+%%%% Adding line numbers
+\if@twocolumn
+  \RequirePackage[switch,mathlines]{lineno}
+\else
+  \RequirePackage[mathlines]{lineno}
+\fi
+
+\if@pnaslineno
+  \linenumbers
+
+  \patchcmd{\abscontent}{\noindent}{\noindent\nolinenumbers}{}{}
+  \patchcmd{\abscontent}{\theabstract}{\internallinenumbers\theabstract}{}{}
+  \appto{\abscontent}{\linenumbers*}
+    
+  \if@twocolumn
+  \else
+    \preto{\@maketitle}{\nolinenumbers}
+  \fi
+\fi
+
 
 %% Footnotes set up
 \RequirePackage[flushmargin,ragged,symbol*]{footmisc}
@@ -452,7 +432,24 @@ THE ABSTRACT\vskip12pt}\let\go\relax\fi
 
 %% For sidecaptions
 \RequirePackage[rightcaption]{sidecap}
-%% Hyperlinking
 
-%% Set URL link color & font
-%\renewcommand\UrlFont{\color{black}\sffamily}
+%% Define widetext as a double-column float, with a warning
+\RequirePackage{float}
+\RequirePackage{stfloats}
+\RequirePackage{marginnote}
+\floatstyle{plain}
+\newfloat{@widetext}{hbt!}{wtt}
+\newenvironment{widetext}{%
+  \PackageWarning{pnas-new}{Use of `widetext` is not recommended. We will now place it at the top or bottom of a page.}
+  \begin{@widetext*}[bt!]
+  \marginnote{\itshape\footnotesize\color{red}Use of \texttt{widetext} is not recommended.}
+  \hrule
+}{
+  \hrule
+  \end{@widetext*}
+}
+
+%% For backward compatibility; does nothing
+\def\pnasbreak{}
+
+\endinput

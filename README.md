@@ -10,3 +10,7 @@ The published version is [here](https://academic.oup.com/bioinformatics/article/
 The pseudocode for the partition function (inside) is in [`tex/fig_pseudocode.tex`](tex/fig_pseudocode.tex):
 
 ![pseudocode](pseudocode.png)
+
+# PNAS LaTeX template
+
+The old 2018 PNAS template used to produce this paper in 2020 is no longer compatible with the latest LaTeX, so this repo switched to the 2019 PNAS template (from the LinearTurboFold paper).

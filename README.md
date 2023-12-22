@@ -7,4 +7,6 @@ The published version is [here](https://academic.oup.com/bioinformatics/article/
 - it contains the Appendix in the same PDF (so  the main text has clickable hyperrefs to figures/tables in the Appendix).
 - it was typeset by LaTeX instead of the publisher's Word-like system.
 
-The pseudocode for the partition function (inside) is in [`tex/fig_pseudocode.tex`](tex/fig_pseudocode.tex).
+The pseudocode for the partition function (inside) is in [`tex/fig_pseudocode.tex`](tex/fig_pseudocode.tex):
+
+![pseudocode](pseudocode.png)
